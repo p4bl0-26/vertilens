@@ -1,54 +1,318 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { ConnectButton } from "@/components/wallet/ConnectButton";
-import { ShieldCheck } from "lucide-react";
+import { 
+  ShieldCheck, Database, Hexagon, FileCode2, QrCode, Network, 
+  Lock, Fingerprint, Cpu, Layers, Link2, Box, Eye, FileSignature, Share2,
+  Globe, Key, Cloud, Code, Braces, Activity, Server, Shield
+} from "lucide-react";
+import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
+import { UploadPanel } from "@/components/UploadPanel";
+import { VerifyPanel } from "@/components/VerifyPanel";
 
-/**
- * Home page shell for the Provenance & Authenticity Verification Platform.
- *
- * TODO (next phase): Replace this shell with:
- *   - <UploadPanel />      — drag & drop image upload → POST /api/register
- *   - <VerifyPanel />      — upload to verify → POST /api/verify
- *   - <QRDisplay />        — renders QR code from assetId after registration
- *   - <AnchorButton />     — calls ProvenanceRegistry.anchorHash() on Monad
- */
-export default function HomePage() {
+// A helper component to render individual floating parallax particles
+function FloatingParticle({ Icon, top, left, right, size, speed, opacity, blur, color = "text-lime-500" }: any) {
+  const { scrollY } = useScroll();
+  // speed determines how fast and in what direction it moves on scroll
+  const y = useTransform(scrollY, [0, 1000], [0, speed]);
+  
   return (
-    <main className="min-h-screen bg-slate-950 text-slate-50 flex flex-col items-center">
+    <motion.div 
+      style={{ 
+        y,
+        ...(left && { left: `${left}%` }),
+        ...(right && { right: `${right}%` })
+      }} 
+      className={`absolute ${top} opacity-${opacity} ${blur}`}
+    >
+      <Icon className={`w-${size} h-${size} ${color} drop-shadow-[0_0_30px_rgba(132,204,22,0.5)]`} strokeWidth={1} />
+    </motion.div>
+  );
+}
 
-      {/* Navbar */}
-      <nav className="w-full max-w-7xl px-6 py-4 flex items-center justify-between border-b border-slate-800">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center">
-            <ShieldCheck className="w-5 h-5 text-white" />
+export default function HomePage() {
+  const [activeTab, setActiveTab] = useState<"register" | "verify">("register");
+  const [showSplash, setShowSplash] = useState(true);
+
+  useEffect(() => {
+    // Hide the splash screen after 2.5 seconds to allow the animation to play
+    const timer = setTimeout(() => setShowSplash(false), 2800);
+    return () => clearTimeout(timer);
+  }, []);
+
+  return (
+    <main className="min-h-[120vh] bg-black text-white flex flex-col relative overflow-x-hidden font-sans selection:bg-lime-500/30 selection:text-lime-200">
+      
+      {/* 
+        ========================================
+        INITIAL SPLASH SCREEN
+        ========================================
+      */}
+      <AnimatePresence>
+        {showSplash && (
+          <motion.div
+            key="splash"
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 0, transition: { duration: 0.8, ease: "easeInOut" } }}
+            className="fixed inset-0 z-[100] bg-black flex items-center justify-center"
+          >
+            <div className="flex items-center overflow-hidden">
+              {/* The Logo (Drops in and spins) */}
+              <motion.div
+                initial={{ scale: 0, rotate: -180 }}
+                animate={{ scale: 1, rotate: 0 }}
+                transition={{ duration: 0.8, type: "spring", bounce: 0.5 }}
+                className="relative z-10 w-20 h-20 bg-lime-500 flex items-center justify-center rounded-sm shadow-[0_0_40px_rgba(132,204,22,0.6)]"
+              >
+                {/* For the ultra-minimalist checkmark/V vibe */}
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="black" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M4 12l4 4L20 6" />
+                </svg>
+              </motion.div>
+
+              {/* The Name (Slides out smoothly from behind the logo) */}
+              <motion.div
+                initial={{ width: 0, opacity: 0, x: -50 }}
+                animate={{ width: "auto", opacity: 1, x: 0 }}
+                transition={{ duration: 0.8, delay: 0.6, ease: "easeOut" }}
+                className="overflow-hidden whitespace-nowrap pl-6"
+              >
+                <span className="text-6xl font-black tracking-[0.2em] text-white uppercase drop-shadow-2xl">
+                  VERITAS
+                </span>
+              </motion.div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+      
+      {/* 
+        Global Scaling Fix: 
+        This makes 1rem equal to exactly 16px on a 1536px screen, 
+        and scales up/down proportionally on all desktop monitors.
+        This forces all Tailwind classes (w-64, text-6xl, etc.) to scale 100% perfectly!
+      */}
+      <style>{`
+        @media (min-width: 1024px) {
+          html {
+            font-size: 1.0416vw;
+          }
+        }
+      `}</style>
+
+      {/* 
+        ========================================
+        DENSE FLOATING PARALLAX BACKGROUND 
+        ========================================
+      */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
+        
+        {/* 
+          SYNCED PARALLAX LAYERS 
+          Layer 1 (Foreground): Speed 350 - Fast
+          Layer 2 (Midground): Speed 200 - Medium
+          Layer 3 (Background): Speed 100 - Slow
+        */}
+        
+        {/* Layer 1: Foreground (Fastest) */}
+        <FloatingParticle Icon={ShieldCheck} top="top-[10%]" left="2" size="64" speed={350} opacity="20" color="text-lime-400" />
+        <FloatingParticle Icon={Database} top="top-[30%]" right="2" size="80" speed={350} opacity="15" blur="blur-[1px]" />
+        <FloatingParticle Icon={QrCode} top="top-[5%]" right="10" size="56" speed={350} opacity="20" color="text-lime-400" />
+        <FloatingParticle Icon={Network} top="top-[75%]" left="5" size="72" speed={350} opacity="25" blur="blur-[1px]" />
+
+        {/* Layer 2: Midground (Medium Density) */}
+        <FloatingParticle Icon={Lock} top="top-[20%]" left="20" size="24" speed={200} opacity="10" blur="blur-[2px]" color="text-lime-500/50" />
+        <FloatingParticle Icon={Fingerprint} top="top-[15%]" right="25" size="32" speed={200} opacity="15" blur="blur-[2px]" color="text-lime-500/60" />
+        <FloatingParticle Icon={Layers} top="top-[70%]" left="25" size="28" speed={200} opacity="15" blur="blur-[2px]" color="text-lime-400/40" />
+        <FloatingParticle Icon={Share2} top="top-[65%]" right="35" size="24" speed={200} opacity="15" blur="blur-[2px]" color="text-lime-500/40" />
+        <FloatingParticle Icon={Server} top="top-[45%]" left="30" size="32" speed={200} opacity="10" blur="blur-[2px]" color="text-lime-500/30" />
+        <FloatingParticle Icon={Shield} top="top-[55%]" right="25" size="24" speed={200} opacity="15" blur="blur-[2px]" color="text-lime-400/50" />
+        <FloatingParticle Icon={Cpu} top="top-[85%]" right="15" size="32" speed={200} opacity="10" blur="blur-[2px]" color="text-white/40" />
+        <FloatingParticle Icon={Key} top="top-[35%]" left="10" size="24" speed={200} opacity="15" blur="blur-[2px]" color="text-lime-500/40" />
+
+        {/* Layer 3: Background (Massive Density Fill) */}
+        <FloatingParticle Icon={FileCode2} top="top-[80%]" right="15" size="40" speed={100} opacity="10" blur="blur-[3px]" color="text-lime-300" />
+        <FloatingParticle Icon={Link2} top="top-[35%]" left="15" size="16" speed={100} opacity="10" blur="blur-[3px]" color="text-lime-300/40" />
+        <FloatingParticle Icon={Box} top="top-[55%]" right="5" size="24" speed={100} opacity="10" blur="blur-[3px]" color="text-white/20" />
+        <FloatingParticle Icon={Eye} top="top-[85%]" left="30" size="20" speed={100} opacity="10" blur="blur-[3px]" color="text-lime-500/50" />
+        <FloatingParticle Icon={FileSignature} top="top-[25%]" right="15" size="16" speed={100} opacity="10" blur="blur-[3px]" color="text-lime-400/30" />
+        
+        {/* Filling all empty quadrants */}
+        <FloatingParticle Icon={Globe} top="top-[8%]" left="40" size="20" speed={100} opacity="5" blur="blur-[4px]" color="text-white/30" />
+        <FloatingParticle Icon={Cloud} top="top-[12%]" right="40" size="24" speed={100} opacity="5" blur="blur-[4px]" color="text-lime-500/20" />
+        <FloatingParticle Icon={Code} top="top-[22%]" left="45" size="16" speed={100} opacity="10" blur="blur-[3px]" color="text-white/20" />
+        <FloatingParticle Icon={Braces} top="top-[28%]" right="45" size="16" speed={100} opacity="5" blur="blur-[4px]" color="text-lime-400/20" />
+        <FloatingParticle Icon={Activity} top="top-[33%]" left="35" size="24" speed={100} opacity="10" blur="blur-[3px]" color="text-white/10" />
+        <FloatingParticle Icon={Hexagon} top="top-[48%]" right="45" size="20" speed={100} opacity="5" blur="blur-[4px]" color="text-lime-500/20" />
+        <FloatingParticle Icon={Database} top="top-[52%]" left="45" size="16" speed={100} opacity="10" blur="blur-[3px]" color="text-white/30" />
+        <FloatingParticle Icon={Lock} top="top-[62%]" right="40" size="24" speed={100} opacity="5" blur="blur-[4px]" color="text-lime-500/20" />
+        <FloatingParticle Icon={ShieldCheck} top="top-[72%]" left="40" size="20" speed={100} opacity="10" blur="blur-[3px]" color="text-white/20" />
+        <FloatingParticle Icon={Fingerprint} top="top-[78%]" right="45" size="16" speed={100} opacity="5" blur="blur-[4px]" color="text-lime-400/20" />
+        <FloatingParticle Icon={Network} top="top-[90%]" left="45" size="24" speed={100} opacity="10" blur="blur-[3px]" color="text-white/10" />
+        <FloatingParticle Icon={Link2} top="top-[95%]" right="35" size="20" speed={100} opacity="5" blur="blur-[4px]" color="text-lime-500/20" />
+        
+        {/* Edge Fillers */}
+        <FloatingParticle Icon={Server} top="top-[18%]" left="5" size="16" speed={100} opacity="10" blur="blur-[3px]" color="text-lime-500/30" />
+        <FloatingParticle Icon={Box} top="top-[42%]" right="5" size="20" speed={100} opacity="5" blur="blur-[4px]" color="text-white/20" />
+        <FloatingParticle Icon={Cpu} top="top-[68%]" left="5" size="24" speed={100} opacity="10" blur="blur-[3px]" color="text-lime-500/20" />
+        <FloatingParticle Icon={Key} top="top-[92%]" right="5" size="16" speed={100} opacity="5" blur="blur-[4px]" color="text-white/30" />
+
+        {/* Ambient Grid / Dots to fill empty space completely */}
+        <div className="absolute inset-0 bg-[url('https://transparenttextures.com/patterns/cubes.png')] opacity-[0.03]" />
+      </div>
+
+      {/* Zth Glowing Arch Background - Made Prominent & Metallic */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[140%] h-[44rem] pointer-events-none opacity-100 flex justify-center z-0">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-lime-500/20 via-transparent to-transparent" />
+        <div className="absolute top-[15%] w-[70%] h-[50rem] border-t-[2px] border-transparent rounded-[100%] bg-gradient-to-b from-lime-300 via-transparent to-transparent p-[2px] shadow-[0_-40px_120px_rgba(132,204,22,0.3)]">
+          <div className="w-full h-full bg-black rounded-[100%] relative overflow-hidden flex flex-col items-center pt-24">
+            {/* Inner Grid for the oval */}
+            <div className="absolute inset-0 bg-[url('https://transparenttextures.com/patterns/cubes.png')] opacity-10" />
+            
+            {/* Massive Fingerprint Watermark representing Provenance */}
+            <Fingerprint className="w-[32rem] h-[32rem] text-lime-500 opacity-[0.03] drop-shadow-[0_0_15px_rgba(132,204,22,0.8)]" strokeWidth={0.5} />
+            
+            {/* Fading gradient so the bottom of the oval blends smoothly into pure black */}
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/80 to-black" />
           </div>
-          <span className="text-xl font-bold tracking-tight">Vertilens</span>
-        </div>
-        <div>
-          <ConnectButton />
-        </div>
-      </nav>
-
-      {/* Main Content */}
-      <div className="w-full max-w-7xl px-6 py-12 md:py-24 flex flex-col items-center flex-1">
-        <div className="text-center max-w-3xl mb-12">
-          <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight mb-6 bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent">
-            Digital Content Provenance
-          </h1>
-          <p className="text-lg md:text-xl text-slate-400">
-            Register. Anchor. Verify. Detect tampering in seconds.
-          </p>
-        </div>
-
-        {/* Upload + Verify panels go here in the next phase */}
-        <div className="w-full max-w-3xl rounded-xl border border-slate-800 bg-slate-900/50 p-12 text-center text-slate-500">
-          UI coming next phase — APIs are live at <code className="text-emerald-400">/api/register</code> and <code className="text-emerald-400">/api/verify</code>
         </div>
       </div>
 
-      <footer className="w-full py-6 text-center text-sm text-slate-600 border-t border-slate-900 mt-auto">
-        <p>Vertilens · Nexora '26 Hackathon</p>
-      </footer>
+      {/* Navbar - Zth Style */}
+      <nav className="w-full px-8 py-6 flex items-center justify-between relative z-20">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 bg-lime-500 flex items-center justify-center rounded-sm shadow-[0_0_15px_rgba(132,204,22,0.4)]">
+            <ShieldCheck className="w-5 h-5 text-black" strokeWidth={2.5} />
+          </div>
+          <span className="text-xl font-bold tracking-tight">Veritas</span>
+        </div>
+        
+        <div className="hidden md:flex items-center gap-8 text-sm text-zinc-400 font-medium">
+          <button className="hover:text-white transition-colors">Developers</button>
+          <button className="hover:text-white transition-colors">Products</button>
+          <button className="hover:text-white transition-colors">Eco Systems</button>
+          <button className="hover:text-white transition-colors">Resources</button>
+        </div>
+
+        <div>
+          {/* Connect Wallet removed as requested */}
+        </div>
+      </nav>
+
+      {/* Main Hero Content */}
+      <div className="w-full max-w-[90rem] mx-auto px-6 pt-20 pb-16 flex flex-col items-center flex-1 relative z-10">
+        
+        {/* Massive Flanking Web3 Icons (Inside Hero Container so they don't hide behind the arch) */}
+        <div className="absolute inset-0 pointer-events-none hidden lg:block">
+          <FloatingParticle Icon={Cpu} top="top-[25%]" left="5" size="64" speed={-150} opacity="15" blur="blur-[1px]" color="text-lime-500" />
+          <FloatingParticle Icon={Hexagon} top="top-[25%]" right="5" size="64" speed={150} opacity="15" blur="blur-[1px]" color="text-lime-500" />
+        </div>
+
+        <div className="flex flex-col items-center text-center max-w-4xl mb-16 relative z-20">
+          
+          <div className="inline-flex items-center px-4 py-1.5 rounded-full border border-zinc-800 bg-zinc-950 mb-8 backdrop-blur-md shadow-[0_0_20px_rgba(132,204,22,0.05)]">
+            <div className="w-2 h-2 rounded-full bg-lime-500 mr-2 shadow-[0_0_8px_rgba(132,204,22,0.8)]" />
+            <span className="text-sm font-medium text-zinc-300">0x.Provenance-layer</span>
+          </div>
+
+          <h1 className="text-6xl md:text-8xl font-medium tracking-tight mb-6 text-white leading-[1.1]">
+            Register. Anchor. <span className="text-zinc-500">Verify.</span>
+          </h1>
+          <p className="text-xl text-zinc-400 font-normal">
+            Where Digital Assets Secure Their Provenance Beyond Creation
+          </p>
+          <p className="text-sm text-zinc-600 mt-4 max-w-2xl">
+            A proof-weighted innovation platform combining cryptographic hashing, expert validation, and blockchain-backed credibility.
+          </p>
+        </div>
+
+        {/* Minimalist Toggle Switch */}
+        <div className="w-full max-w-4xl flex flex-col items-center">
+          <div className="flex p-1 bg-zinc-900/50 rounded-lg mb-10 border border-zinc-800 backdrop-blur-md">
+            <button
+              onClick={() => setActiveTab("register")}
+              className={`relative px-8 py-2.5 rounded-md text-sm font-medium transition-colors ${
+                activeTab === "register" ? "text-black" : "text-zinc-500 hover:text-white"
+              }`}
+            >
+              {activeTab === "register" && (
+                <motion.div layoutId="toggle" className="absolute inset-0 bg-lime-500 rounded-md shadow-[0_0_10px_rgba(132,204,22,0.3)]" />
+              )}
+              <span className="relative z-10">Register Asset</span>
+            </button>
+            <button
+              onClick={() => setActiveTab("verify")}
+              className={`relative px-8 py-2.5 rounded-md text-sm font-medium transition-colors ${
+                activeTab === "verify" ? "text-black" : "text-zinc-500 hover:text-white"
+              }`}
+            >
+              {activeTab === "verify" && (
+                <motion.div layoutId="toggle" className="absolute inset-0 bg-lime-500 rounded-md shadow-[0_0_10px_rgba(132,204,22,0.3)]" />
+              )}
+              <span className="relative z-10">Verify Authenticity</span>
+            </button>
+          </div>
+
+          {/* Tab Content Area with Web3 Decorations */}
+          <div className="w-full relative min-h-[400px]">
+            
+            {/* Left Side Web3 Elements */}
+            <div className="hidden lg:flex absolute -left-32 top-12 flex-col items-end gap-6 opacity-60">
+              <div className="flex items-center gap-3">
+                <span className="text-xs font-mono text-lime-500">MONAD_TESTNET</span>
+                <div className="w-16 h-[1px] bg-gradient-to-l from-lime-500 to-transparent" />
+              </div>
+              <div className="flex items-center gap-3 mt-10">
+                <span className="text-xs font-mono text-zinc-500">ZK_PROOF_READY</span>
+                <div className="w-8 h-[1px] bg-gradient-to-l from-zinc-500 to-transparent" />
+              </div>
+            </div>
+
+            {/* Right Side Web3 Elements */}
+            <div className="hidden lg:flex absolute -right-32 top-16 flex-col items-start gap-8 opacity-60">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-[1px] bg-gradient-to-r from-lime-500 to-transparent" />
+                <div className="flex items-center gap-1.5 border border-lime-500/30 bg-lime-500/5 px-2 py-1 rounded text-[10px] font-mono text-lime-400">
+                  <div className="w-1.5 h-1.5 bg-lime-500 rounded-full animate-pulse" />
+                  SECURE_NODE
+                </div>
+              </div>
+              <div className="flex items-center gap-3 mt-12">
+                <div className="w-20 h-[1px] bg-gradient-to-r from-zinc-500 to-transparent" />
+                <span className="text-xs font-mono text-zinc-500">IPFS_LINKED</span>
+              </div>
+            </div>
+
+            <AnimatePresence mode="wait">
+              {activeTab === "register" ? (
+                <motion.div
+                  key="register"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.3 }}
+                  className="w-full relative z-10"
+                >
+                  <UploadPanel />
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="verify"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.3 }}
+                  className="w-full relative z-10"
+                >
+                  <VerifyPanel />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        </div>
+      </div>
+
     </main>
   );
 }
