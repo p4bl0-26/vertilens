@@ -366,17 +366,17 @@ export async function POST(
 
   // ── Step 9: Insert metadata row into the `assets` table ────────────────────
   const assetInsert: AssetInsert = {
-    filename:         originalFile.name,
-    storage_path:     storagePath,
+    filename:     originalFile.name,
+    storage_path: storagePath,
     sha256,
     ahash,
-    width:            imageWidth  ?? null,
-    height:           imageHeight ?? null,
-    file_size:        originalFile.size,
-    // Anchor columns start null; populated by POST /api/anchor.
-    tx_hash:          null,
-    contract_address: null,
-    anchored_at:      null,
+    width:     imageWidth  ?? null,
+    height:    imageHeight ?? null,
+    file_size: originalFile.size,
+    // tx_hash, contract_address, anchored_at are intentionally omitted here.
+    // They default to NULL in PostgreSQL and are written later by POST /api/anchor.
+    // Including them here causes a PGRST204 schema cache error if the ALTER TABLE
+    // migration has not yet been applied or the schema cache not refreshed.
   };
 
   console.log(`${tag} Inserting asset metadata into DB:`, {
