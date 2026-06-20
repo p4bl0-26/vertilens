@@ -366,13 +366,17 @@ export async function POST(
 
   // ── Step 9: Insert metadata row into the `assets` table ────────────────────
   const assetInsert: AssetInsert = {
-    filename: originalFile.name,
-    storage_path: storagePath,
+    filename:         originalFile.name,
+    storage_path:     storagePath,
     sha256,
     ahash,
-    width: imageWidth ?? null,
-    height: imageHeight ?? null,
-    file_size: originalFile.size,
+    width:            imageWidth  ?? null,
+    height:           imageHeight ?? null,
+    file_size:        originalFile.size,
+    // Anchor columns start null; populated by POST /api/anchor.
+    tx_hash:          null,
+    contract_address: null,
+    anchored_at:      null,
   };
 
   console.log(`${tag} Inserting asset metadata into DB:`, {

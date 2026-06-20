@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { ConnectButton } from "@/components/wallet/ConnectButton";
+import Link from "next/link";
 import { 
   ShieldCheck, Database, Hexagon, FileCode2, QrCode, Network, 
   Lock, Fingerprint, Cpu, Layers, Link2, Box, Eye, FileSignature, Share2,
@@ -11,7 +11,7 @@ import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion"
 import { UploadPanel } from "@/components/UploadPanel";
 import { VerifyPanel } from "@/components/VerifyPanel";
 
-// A helper component to render individual floating parallax particles
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function FloatingParticle({ Icon, top, left, right, size, speed, opacity, blur, color = "text-lime-500" }: any) {
   const { scrollY } = useScroll();
   // speed determines how fast and in what direction it moves on scroll
@@ -27,7 +27,7 @@ function FloatingParticle({ Icon, top, left, right, size, speed, opacity, blur, 
       className={`absolute ${top} opacity-${opacity} ${blur}`}
     >
       <div className={`w-${size} h-${size} flex items-center justify-center`}>
-        <Icon className={`w-full h-full ${color} drop-shadow-[0_0_30px_rgba(132,204,22,0.5)]`} strokeWidth={1} />
+        <Icon suppressHydrationWarning className={`w-full h-full ${color} drop-shadow-[0_0_30px_rgba(132,204,22,0.5)]`} strokeWidth={1} />
       </div>
     </motion.div>
   );
@@ -65,12 +65,9 @@ export default function HomePage() {
                 initial={{ scale: 0, rotate: -180 }}
                 animate={{ scale: 1, rotate: 0 }}
                 transition={{ duration: 0.8, type: "spring", bounce: 0.5 }}
-                className="relative z-10 w-20 h-20 bg-lime-500 flex items-center justify-center rounded-sm shadow-[0_0_40px_rgba(132,204,22,0.6)]"
+                className="relative z-10 w-24 h-24 flex items-center justify-center drop-shadow-[0_0_40px_rgba(132,204,22,0.6)]"
               >
-                {/* For the ultra-minimalist checkmark/V vibe */}
-                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="black" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M4 12l4 4L20 6" />
-                </svg>
+                <img src="/logo.png" alt="Veritas Logo" className="w-full h-full object-contain" />
               </motion.div>
 
               {/* The Name (Slides out smoothly from behind the logo) */}
@@ -184,17 +181,13 @@ export default function HomePage() {
       {/* Navbar - Zth Style */}
       <nav className="w-full px-8 py-6 flex items-center justify-between relative z-20">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-lime-500 flex items-center justify-center rounded-sm shadow-[0_0_15px_rgba(132,204,22,0.4)]">
-            <ShieldCheck className="w-5 h-5 text-black" strokeWidth={2.5} />
-          </div>
+          <img src="/logo.png" alt="Veritas Logo" className="w-10 h-10 drop-shadow-[0_0_15px_rgba(132,204,22,0.4)]" />
           <span className="text-xl font-bold tracking-tight">Veritas</span>
         </div>
         
         <div className="hidden md:flex items-center gap-8 text-sm text-zinc-400 font-medium">
-          <button className="hover:text-white transition-colors">Developers</button>
-          <button className="hover:text-white transition-colors">Products</button>
-          <button className="hover:text-white transition-colors">Eco Systems</button>
-          <button className="hover:text-white transition-colors">Resources</button>
+          <Link href="/about" className="hover:text-white transition-colors">About Architecture</Link>
+          <a href="https://github.com" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">GitHub</a>
         </div>
 
         <div>
@@ -224,9 +217,19 @@ export default function HomePage() {
           <p className="text-xl text-zinc-400 font-normal">
             Where Digital Assets Secure Their Provenance Beyond Creation
           </p>
-          <p className="text-sm text-zinc-600 mt-4 max-w-2xl">
-            A proof-weighted innovation platform combining cryptographic hashing, expert validation, and blockchain-backed credibility.
-          </p>
+          
+          {/* Instructions Box */}
+          <div className="mt-10 max-w-2xl mx-auto bg-zinc-900/40 border border-zinc-800 rounded-xl p-6 text-left backdrop-blur-md shadow-[0_0_30px_rgba(0,0,0,0.5)]">
+            <h3 className="text-lime-400 font-bold mb-3 flex items-center gap-2">
+              <ShieldCheck className="w-5 h-5" />
+              How Veritas Works
+            </h3>
+            <ul className="text-zinc-400 text-sm space-y-3">
+              <li><strong className="text-zinc-200">1. Register:</strong> Upload an image to generate its exact SHA-256 and AI perceptual hash.</li>
+              <li><strong className="text-zinc-200">2. Anchor:</strong> Mint the cryptographic hash directly onto the Monad Testnet for immutable proof of origin.</li>
+              <li><strong className="text-zinc-200">3. Verify:</strong> Upload any image later to check its authenticity. Our AI forensics will detect any manipulation.</li>
+            </ul>
+          </div>
         </div>
 
         {/* Minimalist Toggle Switch */}

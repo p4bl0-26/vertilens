@@ -9,6 +9,9 @@ export function UploadPanel() {
   const [file, setFile] = useState<File | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [hash, setHash] = useState<string | null>(null);
+  const [assetId, setAssetId] = useState<string | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
@@ -18,12 +21,37 @@ export function UploadPanel() {
     }
   };
 
-  const handleFile = (f: File) => {
+  const handleFile = async (f: File) => {
     setFile(f);
-    // Simulate API registration delay
-    setTimeout(() => {
-      setHash("0x8f2b3e4a5d...7e9f");
-    }, 1200);
+    setIsUploading(true);
+    setErrorMsg(null);
+    setHash(null);
+    setAssetId(null);
+
+    const formData = new FormData();
+    formData.append("image", f);
+
+    try {
+      const res = await fetch("/api/register", {
+        method: "POST",
+        body: formData,
+      });
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        throw new Error(data.error?.message || "Failed to register asset");
+      }
+
+      setHash(data.data.sha256);
+      setAssetId(data.data.assetId);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
+      console.error("Upload error:", err);
+      setErrorMsg(err.message || "An error occurred during upload");
+      setFile(null);
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   return (
@@ -40,6 +68,7 @@ export function UploadPanel() {
             const input = document.createElement("input");
             input.type = "file";
             input.accept = "image/*";
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             input.onchange = (e: any) => {
               if (e.target.files && e.target.files[0]) {
                 handleFile(e.target.files[0]);
@@ -74,23 +103,26 @@ export function UploadPanel() {
               <span className="text-zinc-500 text-sm font-medium">Cryptographic Fingerprint</span>
               {hash ? (
                 <span className="font-mono text-lime-400 tracking-wider break-all text-right drop-shadow-[0_0_2px_rgba(132,204,22,0.8)]">{hash}</span>
-              ) : (
+              ) : isUploading ? (
                 <span className="text-zinc-600 text-sm italic">Computing SHA-256...</span>
-              )}
+              ) : errorMsg ? (
+                <span className="text-red-500 text-sm">{errorMsg}</span>
+              ) : null}
             </div>
           </div>
 
           <div className="w-full max-w-md">
             <AnchorButton
               hash={hash || ""}
-              disabled={!hash}
+              assetId={assetId || ""}
+              disabled={!hash || !assetId}
               onSuccess={() => console.log("Anchored!")}
             />
           </div>
 
-          {hash && (
+          {hash && assetId && (
             <div className="w-full mt-10 pt-10 border-t border-zinc-800 flex justify-center">
-              <QRDisplay assetId="f47ac10b-58cc-4372-a567-0e02b2c3d479" />
+              <QRDisplay assetId={assetId} />
             </div>
           )}
         </div>

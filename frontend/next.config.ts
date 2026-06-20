@@ -18,6 +18,15 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: false,
   },
+
+  /** Fix for @metamask/sdk webpack crash (RainbowKit dependency) */
+  webpack: (config) => {
+    config.resolve.fallback = {
+      ...config.resolve.fallback,
+      "@react-native-async-storage/async-storage": false,
+    };
+    return config;
+  },
 };
 
 export default nextConfig;
