@@ -39,7 +39,7 @@ function FloatingParticle({ Icon, top, left, right, size, speed, opacity, blur, 
 export default function HomePage() {
   const [activeTab, setActiveTab] = useState<"register" | "verify">("register");
   const [showSplash, setShowSplash] = useState(true);
-  const [appTheme, setAppTheme] = useState<"theme-lime" | "theme-red" | "theme-amber">("");
+  const [appTheme, setAppTheme] = useState<"theme-lime" | "theme-red" | "theme-amber" | "">("");
   
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { openConnectModal } = useConnectModal();
