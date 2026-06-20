@@ -27,7 +27,7 @@ export function Footer() {
             </div>
             <button 
               onClick={() => setIsModalOpen(true)}
-              className="mt-4 text-left w-fit text-lime-500 hover:text-lime-400 hover:underline underline-offset-4 font-mono text-xs tracking-wider transition-colors"
+              className="mt-4 text-left w-fit text-brand-500 hover:text-brand-400 hover:underline underline-offset-4 font-mono text-xs tracking-wider transition-colors"
             >
               [ View Architecture Walkthrough ]
             </button>
@@ -52,29 +52,29 @@ export function Footer() {
             <ul className="text-zinc-300 space-y-3 font-mono text-xs">
               <li className="flex items-center gap-3">
                 <div className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-lime-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-lime-500"></span>
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-brand-500"></span>
                 </div>
                 Network Online
               </li>
               <li className="flex items-center gap-3">
                 <div className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-lime-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-lime-500"></span>
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-brand-500"></span>
                 </div>
                 AI Engine Active
               </li>
               <li className="flex items-center gap-3">
                 <div className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-lime-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-lime-500"></span>
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-brand-500"></span>
                 </div>
                 Storage Connected
               </li>
               <li className="flex items-center gap-3">
                 <div className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-lime-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-lime-500"></span>
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-brand-500"></span>
                 </div>
                 Blockchain Verified
               </li>
@@ -106,7 +106,7 @@ export function Footer() {
                 {/* Header */}
                 <div className="text-center space-y-4">
                   <h2 className="text-3xl font-bold text-white tracking-tight uppercase">System Architecture</h2>
-                  <p className="text-lime-500 font-mono text-sm tracking-widest">VERITAS PLATFORM ENGINE</p>
+                  <p className="text-brand-500 font-mono text-sm tracking-widest">VERITAS PLATFORM ENGINE</p>
                 </div>
 
                 {/* Section 1: How it works */}
@@ -215,7 +215,7 @@ function FlowStep({ text, highlight = false }: { text: string; highlight?: boole
   return (
     <div className={`px-6 py-3 rounded-lg border text-sm font-medium w-full max-w-sm text-center transition-colors ${
       highlight 
-        ? "bg-lime-500/10 border-lime-500/50 text-lime-400 shadow-[0_0_15px_rgba(132,204,22,0.1)]" 
+        ? "bg-brand-500/10 border-brand-500/50 text-brand-400 shadow-[0_0_15px_rgba(var(--brand-500),0.1)]" 
         : "bg-zinc-900 border-zinc-800 text-zinc-300"
     }`}>
       {text}
