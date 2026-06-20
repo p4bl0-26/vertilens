@@ -89,7 +89,7 @@ const connectors = [
           projectId: WALLETCONNECT_PROJECT_ID,
           metadata: {
             name:        process.env.NEXT_PUBLIC_APP_NAME ?? "Nexora",
-            description: process.env.NEXT_PUBLIC_APP_DESC ?? "Intent-Centric Web3 Execution",
+            description: process.env.NEXT_PUBLIC_APP_DESC ?? "Digital Content Provenance & Authenticity Verification",
             url:         process.env.NEXT_PUBLIC_APP_URL  ?? "https://nexora.xyz",
             icons:       [`${process.env.NEXT_PUBLIC_APP_URL ?? ""}/logo.svg`],
           },

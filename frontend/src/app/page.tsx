@@ -1,29 +1,28 @@
 "use client";
 
-import { useState } from "react";
 import { ConnectButton } from "@/components/wallet/ConnectButton";
-import { IntentInput } from "@/components/intent/IntentInput";
-import { ExecutionTimeline } from "@/components/intent/ExecutionTimeline";
-import type { IntentPlan } from "@nexora/shared-types/intent.types";
-import { Activity } from "lucide-react";
+import { ShieldCheck } from "lucide-react";
 
+/**
+ * Home page shell for the Provenance & Authenticity Verification Platform.
+ *
+ * TODO (next phase): Replace this shell with:
+ *   - <UploadPanel />      — drag & drop image upload → POST /api/register
+ *   - <VerifyPanel />      — upload to verify → POST /api/verify
+ *   - <QRDisplay />        — renders QR code from assetId after registration
+ *   - <AnchorButton />     — calls ProvenanceRegistry.anchorHash() on Monad
+ */
 export default function HomePage() {
-  const [activePlan, setActivePlan] = useState<IntentPlan | null>(null);
-
-  const handleReset = () => {
-    setActivePlan(null);
-  };
-
   return (
     <main className="min-h-screen bg-slate-950 text-slate-50 flex flex-col items-center">
-      
+
       {/* Navbar */}
       <nav className="w-full max-w-7xl px-6 py-4 flex items-center justify-between border-b border-slate-800">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center">
-            <Activity className="w-5 h-5 text-white" />
+          <div className="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center">
+            <ShieldCheck className="w-5 h-5 text-white" />
           </div>
-          <span className="text-xl font-bold tracking-tight">Nexora</span>
+          <span className="text-xl font-bold tracking-tight">Vertilens</span>
         </div>
         <div>
           <ConnectButton />
@@ -32,38 +31,23 @@ export default function HomePage() {
 
       {/* Main Content */}
       <div className="w-full max-w-7xl px-6 py-12 md:py-24 flex flex-col items-center flex-1">
-        
-        {/* Header */}
         <div className="text-center max-w-3xl mb-12">
-          <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight mb-6 bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent">
-            Intent-Centric Web3 Execution
+          <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight mb-6 bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent">
+            Digital Content Provenance
           </h1>
           <p className="text-lg md:text-xl text-slate-400">
-            Stop bridging, swapping, and signing a dozen transactions manually.
-            Just tell us what you want to do, and Nexora will handle the rest.
+            Register. Anchor. Verify. Detect tampering in seconds.
           </p>
         </div>
 
-        {/* Dynamic Demo Container */}
-        <div className="w-full max-w-3xl transition-all duration-500 ease-in-out">
-          {!activePlan ? (
-            <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
-              <IntentInput onPlanReceived={setActivePlan} />
-            </div>
-          ) : (
-            <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
-              <ExecutionTimeline 
-                initialPlan={activePlan} 
-                onReset={handleReset} 
-              />
-            </div>
-          )}
+        {/* Upload + Verify panels go here in the next phase */}
+        <div className="w-full max-w-3xl rounded-xl border border-slate-800 bg-slate-900/50 p-12 text-center text-slate-500">
+          UI coming next phase — APIs are live at <code className="text-emerald-400">/api/register</code> and <code className="text-emerald-400">/api/verify</code>
         </div>
       </div>
-      
-      {/* Footer */}
+
       <footer className="w-full py-6 text-center text-sm text-slate-600 border-t border-slate-900 mt-auto">
-        <p>Nexora '26 Hackathon Demo</p>
+        <p>Vertilens · Nexora '26 Hackathon</p>
       </footer>
     </main>
   );

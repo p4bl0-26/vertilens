@@ -1,9 +1,12 @@
-// Re-export every type from each domain module.
-// Import from this barrel file when you need types from multiple modules.
-// Import directly from the sub-path (e.g. @nexora/shared-types/intent.types)
-// when you only need one module — better tree-shaking.
+/**
+ * @file index.ts
+ * @description Barrel export for @nexora/shared-types.
+ *
+ * Import from this file when you need types from multiple modules:
+ *   import type { Asset, VerificationResult } from "@nexora/shared-types";
+ *
+ * Import directly from the sub-path for better tree-shaking:
+ *   import type { Asset } from "@nexora/shared-types/provenance.types";
+ */
 
-export * from "./intent.types";
-export * from "./agent.types";
-export * from "./transaction.types";
-export * from "./api.types";
+export * from "./provenance.types";
