@@ -313,6 +313,9 @@ export default function HomePage() {
         </div>
       </div>
 
+      <footer className="w-full py-6 text-center text-sm text-slate-600 border-t border-slate-900 mt-auto relative z-10">
+        <p>Veritas · Nexora &apos;26 Hackathon</p>
+      </footer>
     </main>
   );
 }

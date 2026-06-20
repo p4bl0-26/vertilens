@@ -19,7 +19,7 @@
  *   success: true,
  *   data: {
  *     explanation: string  — forensic explanation paragraph
- *     provider:    string  — "openai" | "anthropic" | "fallback"
+ *     provider:    string  — "gemini" | "fallback"
  *     model:       string  — model identifier or "rule-based"
  *   }
  * }

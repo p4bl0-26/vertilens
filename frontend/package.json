@@ -10,7 +10,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.105.0",
+    "@google/genai": "^2.9.0",
     "@nexora/shared-types": "*",
     "@rainbow-me/rainbowkit": "^2.2.4",
     "@supabase/supabase-js": "^2.108.2",
@@ -22,7 +22,6 @@
     "framer-motion": "^12.40.0",
     "lucide-react": "^0.468.0",
     "next": "^15.1.0",
-    "openai": "^6.44.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hot-toast": "^2.4.1",
@@ -38,6 +37,7 @@
     "@types/node": "^22.0.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
+    "@types/uuid": "^10.0.0",
     "autoprefixer": "^10.4.20",
     "eslint": "^9.39.4",
     "eslint-config-next": "^15.5.19",

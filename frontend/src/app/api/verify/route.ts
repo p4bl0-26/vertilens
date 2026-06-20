@@ -76,7 +76,6 @@ import { computeAverageHash } from "@/lib/hash/averageHash";
 import { computeHammingDistance, type HammingResult } from "@/lib/hash/hammingDistance";
 import {
   createAdminClient,
-  getPublicStorageUrl,
   type AssetRecord,
 } from "@/lib/supabase";
 import { v4 as uuidv4 } from "uuid";
