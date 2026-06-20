@@ -1,6 +1,6 @@
 /**
  * @file ai.ts
- * @description AI provider abstraction layer for the Nexora tamper-detection
+ * @description AI provider abstraction layer for the Veritas tamper-detection
  *              explanation service.
  *
  * PROVIDER SELECTION:

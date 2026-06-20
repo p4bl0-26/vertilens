@@ -2,7 +2,7 @@
 
 /**
  * @file AppProviders.tsx
- * @description Root provider composition for the Nexora frontend.
+ * @description Root provider composition for the Veritas frontend.
  *
  * Render order (outermost → innermost):
  *   WagmiProvider

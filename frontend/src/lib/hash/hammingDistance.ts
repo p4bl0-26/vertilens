@@ -30,7 +30,7 @@
  * │ ~128               │ Completely unrelated images (random chance)   │
  * └────────────────────┴───────────────────────────────────────────────┘
  *
- * Use Case in Nexora:
+ * Use Case in Veritas:
  *   - Compare the perceptual hash of an uploaded image against the hash stored
  *     on-chain (fetched from Monad Testnet via Viem).
  *   - Use the distance to CLASSIFY the result and feed a meaningful tamper

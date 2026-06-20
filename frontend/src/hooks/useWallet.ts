@@ -2,7 +2,7 @@
 
 /**
  * @file useWallet.ts
- * @description Unified wallet state hook for the Nexora frontend.
+ * @description Unified wallet state hook for the Veritas frontend.
  *
  * Aggregates account, chain, balance, and connection state from Wagmi
  * into a single, memoised object. Prevents individual components from

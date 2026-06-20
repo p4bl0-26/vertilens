@@ -6,7 +6,7 @@
  * is deterministic and collision-resistant — any single byte change to the input
  * will produce a completely different output hash.
  *
- * Use Case in Nexora:
+ * Use Case in Veritas:
  *   - Hashing the raw image file buffer before anchoring it on-chain.
  *   - The resulting hex string is what gets written to the Monad smart contract.
  *   - During verification, the same hash is recomputed and compared against the

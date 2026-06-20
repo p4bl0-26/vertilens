@@ -1,6 +1,6 @@
 /**
  * @file supabase.ts
- * @description Supabase client factory and type definitions for Nexora.
+ * @description Supabase client factory and type definitions for Veritas.
  *
  * ARCHITECTURE NOTE — TWO CLIENTS:
  * Supabase requires different client configurations depending on the runtime context:

@@ -238,7 +238,7 @@ export default function AboutPage() {
 
             {/* Footer */}
             <footer className="text-center py-8 text-xs text-zinc-700 border-t border-zinc-900">
-              Veritas · Nexora &apos;26 Hackathon
+              Veritas · Veritas &apos;26 Hackathon
             </footer>
           </motion.div>
         )}

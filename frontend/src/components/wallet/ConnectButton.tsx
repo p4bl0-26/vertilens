@@ -2,7 +2,7 @@
 
 /**
  * @file ConnectButton.tsx
- * @description Nexora-branded RainbowKit connect button wrapper.
+ * @description Veritas-branded RainbowKit connect button wrapper.
  *
  * Provides three visual states:
  *   1. Not connected → "Connect Wallet" button
@@ -207,7 +207,7 @@ export interface ConnectButtonProps {
 }
 
 /**
- * Nexora wallet connect button.
+ * Veritas wallet connect button.
  * Renders contextually based on connection state using RainbowKit's render prop.
  *
  * @example

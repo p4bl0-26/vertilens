@@ -1,7 +1,7 @@
 /**
  * @file viem.ts
  * @description Viem client factory and blockchain interaction utilities for
- *              the Nexora ProvenanceRegistry contract on Monad Testnet.
+ *              the Veritas ProvenanceRegistry contract on Monad Testnet.
  *
  * RESPONSIBILITIES:
  *   - Define the Monad Testnet chain configuration for viem.

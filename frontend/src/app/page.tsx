@@ -38,7 +38,9 @@ function FloatingParticle({ Icon, top, left, right, size, speed, opacity, blur, 
 export default function HomePage() {
   const [activeTab, setActiveTab] = useState<"register" | "verify">("register");
   const [showSplash, setShowSplash] = useState(true);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { openConnectModal } = useConnectModal();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { isConnected } = useAccount();
 
   useEffect(() => {
@@ -71,6 +73,7 @@ export default function HomePage() {
                 transition={{ duration: 0.8, type: "spring", bounce: 0.5 }}
                 className="relative z-10 w-24 h-24 flex items-center justify-center drop-shadow-[0_0_40px_rgba(132,204,22,0.6)]"
               >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src="/logo.png" alt="Veritas Logo" className="w-full h-full object-contain" />
               </motion.div>
 
@@ -187,6 +190,7 @@ export default function HomePage() {
       {/* Navbar - Zth Style */}
       <nav className="w-full px-8 py-6 flex items-center justify-between relative z-20">
         <div className="flex items-center gap-3">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/logo.png" alt="Veritas Logo" className="w-10 h-10 drop-shadow-[0_0_15px_rgba(132,204,22,0.4)]" />
           <span className="text-xl font-bold tracking-tight">Veritas</span>
         </div>

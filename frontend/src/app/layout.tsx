@@ -3,7 +3,7 @@ import "@rainbow-me/rainbowkit/styles.css";
 import "./globals.css"; // Ensure you have globals.css or omit if not created yet
 
 export const metadata = {
-  title: "Nexora",
+  title: "Veritas | Digital Content Provenance",
   description: "Intent-centric Web3 Platform",
 };
 

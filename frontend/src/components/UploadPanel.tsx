@@ -36,10 +36,15 @@ export function UploadPanel() {
         method: "POST",
         body: formData,
       });
-      const data = await res.json();
+      let data;
+      try {
+        data = await res.json();
+      } catch {
+        throw new Error("Server returned an invalid response. The file might be too large or the server is down.");
+      }
 
-      if (!res.ok || !data.success) {
-        throw new Error(data.error?.message || "Failed to register asset");
+      if (!res.ok || !data?.success) {
+        throw new Error(data?.error?.message || "Failed to register asset");
       }
 
       setHash(data.data.sha256);

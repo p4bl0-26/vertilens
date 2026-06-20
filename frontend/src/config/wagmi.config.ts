@@ -75,7 +75,7 @@ import { RAINBOWKIT_WALLETS } from "./rainbowkit.config";
 const connectors = connectorsForWallets(
   RAINBOWKIT_WALLETS,
   {
-    appName: process.env.NEXT_PUBLIC_APP_NAME ?? "Nexora",
+    appName: process.env.NEXT_PUBLIC_APP_NAME ?? "Veritas",
     projectId: WALLETCONNECT_PROJECT_ID,
   }
 );

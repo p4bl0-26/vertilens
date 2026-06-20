@@ -1,7 +1,7 @@
 /**
  * @file route.ts  (src/app/api/verify/route.ts)
  * @description Next.js App Router Route Handler for verifying whether an uploaded
- *              image matches a previously registered asset in the Nexora provenance system.
+ *              image matches a previously registered asset in the Veritas provenance system.
  *
  * ENDPOINT:   POST /api/verify
  * CONTENT:    multipart/form-data
@@ -56,7 +56,9 @@
  *      similarityPercent: number,
  *      tamperLevel: HammingResult["tamperLevel"],
  *      tamperDescription: string,
- *      matchedAsset: AssetRecord
+ *      matchedAsset: AssetRecord,
+ *      uploadedSha256: string,
+ *      uploadedAhash: string
  *    }
  *  }
  *
@@ -93,7 +95,7 @@ import { v4 as uuidv4 } from "uuid";
  *   - Lower (e.g., 5): Stricter — only very near-identical images match.
  *   - Higher (e.g., 20): Looser — more false positives but catches heavier edits.
  */
-const TAMPER_DETECTION_THRESHOLD = 10;
+const TAMPER_DETECTION_THRESHOLD = 70;
 
 /**
  * Maximum number of assets to load for fuzzy matching.
@@ -115,8 +117,8 @@ const ACCEPTED_MIME_TYPES = new Set([
   "image/gif",
 ]);
 
-/** Maximum file size: 20 MB. */
-const MAX_FILE_SIZE_BYTES = 20 * 1024 * 1024;
+/** Maximum file size: 4.5 MB to avoid serverless payload limit. */
+const MAX_FILE_SIZE_BYTES = 4.5 * 1024 * 1024;
 
 // ─── Response Types ───────────────────────────────────────────────────────────
 
@@ -137,6 +139,8 @@ interface LikelyTamperedResult {
   tamperLevel: HammingResult["tamperLevel"];
   tamperDescription: string;
   matchedAsset: AssetRecord;
+  uploadedSha256: string;
+  uploadedAhash: string;
 }
 
 /** Returned when no registered asset matches by SHA-256 or fuzzy aHash scan. */
@@ -247,7 +251,7 @@ export async function POST(
     console.warn(`${tag} ✗ File too large: ${sizeMB} MB`);
     return errorResponse(
       "FILE_TOO_LARGE",
-      `File size ${sizeMB} MB exceeds the 20 MB maximum.`,
+      `File size ${sizeMB} MB exceeds the 4.5 MB maximum.`,
       413
     );
   }
@@ -498,6 +502,8 @@ export async function POST(
         tamperLevel: bestResult.tamperLevel,
         tamperDescription: bestResult.description,
         matchedAsset: bestAsset,
+        uploadedSha256: uploadedSha256,
+        uploadedAhash: uploadedAhash,
       } satisfies LikelyTamperedResult,
     });
   }
@@ -507,7 +513,7 @@ export async function POST(
   // ════════════════════════════════════════════════════════════════════════════
   //
   // No SHA-256 match, and no aHash within the similarity threshold.
-  // This image has no provenance record in the Nexora system.
+  // This image has no provenance record in the Veritas system.
   // ─────────────────────────────────────────────────────────────────────────
 
   console.log(

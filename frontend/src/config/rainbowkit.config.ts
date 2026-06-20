@@ -26,7 +26,7 @@ import {
 // ─────────────────────────────────────────────────────────────────────────────
 
 export const RAINBOWKIT_APP_INFO = {
-  appName:        (process.env["NEXT_PUBLIC_APP_NAME"])        ?? "Nexora",
+  appName:        (process.env["NEXT_PUBLIC_APP_NAME"])        ?? "Veritas",
   projectId:      (process.env["NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID"]) ?? "",
   appDescription: (process.env["NEXT_PUBLIC_APP_DESC"])        ?? "Intent-Centric Web3 Execution",
   appUrl:         (process.env["NEXT_PUBLIC_APP_URL"])         ?? "https://nexora.xyz",
@@ -47,7 +47,7 @@ const _darkBase = darkTheme({
 });
 
 /**
- * Nexora dark theme — brand-consistent violet/dark palette.
+ * Veritas dark theme — brand-consistent violet/dark palette.
  */
 export const nexoraDarkTheme: Theme = {
   ..._darkBase,
@@ -77,7 +77,7 @@ export const nexoraDarkTheme: Theme = {
 };
 
 /**
- * Nexora light theme — for future light-mode support.
+ * Veritas light theme — for future light-mode support.
  */
 const _lightBase = lightTheme({
   accentColor:           "#84CC16",

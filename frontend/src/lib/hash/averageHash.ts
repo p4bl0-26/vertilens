@@ -20,7 +20,7 @@
  *   5. For each pixel: if pixel >= mean, set bit to 1, otherwise 0.
  *   6. Pack the 256 bits into a 64-character hex string (256 / 4 bits per hex char).
  *
- * Use Case in Nexora:
+ * Use Case in Veritas:
  *   - Detecting tampered images that have been visually modified (cropped,
  *     color-graded, or had objects added/removed).
  *   - A Hamming Distance of 0-10 out of 256 bits = likely the same image.

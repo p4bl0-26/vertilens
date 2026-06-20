@@ -1,7 +1,7 @@
 /**
  * @file route.ts  (src/app/api/register/route.ts)
  * @description Next.js App Router Route Handler for registering (uploading) a new
- *              digital asset into the Nexora provenance system.
+ *              digital asset into the Veritas provenance system.
  *
  * ENDPOINT:   POST /api/register
  * CONTENT:    multipart/form-data
@@ -55,7 +55,7 @@ import {
  * Maximum allowed upload size in bytes.
  * 20 MB is generous for a provenance demo; tighten this in production.
  */
-const MAX_FILE_SIZE_BYTES = 20 * 1024 * 1024; // 20 MB
+const MAX_FILE_SIZE_BYTES = 4.5 * 1024 * 1024; // 4.5 MB
 
 /**
  * Allowlist of MIME types we accept for provenance registration.
