@@ -223,6 +223,7 @@ export const STORAGE_FOLDER_ORIGINALS = "originals" as const;
  * import { supabaseBrowser } from "@/lib/supabase";
  * const { data } = await supabaseBrowser.from("assets").select("*");
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const supabaseBrowser: SupabaseClient<any, "public", any> = createClient<any, "public", any>(
   SUPABASE_URL,
   SUPABASE_ANON_KEY,
@@ -256,6 +257,7 @@ export const supabaseBrowser: SupabaseClient<any, "public", any> = createClient<
  * const supabase = createAdminClient();
  * const { data, error } = await supabase.from("assets").insert([...]);
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function createAdminClient(): SupabaseClient<any, "public", any> {
   if (!SUPABASE_SERVICE_ROLE_KEY) {
     throw new Error(
@@ -265,6 +267,7 @@ export function createAdminClient(): SupabaseClient<any, "public", any> {
     );
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return createClient<any, "public", any>(SUPABASE_URL!, SUPABASE_SERVICE_ROLE_KEY, {
     auth: {
       // Server-side clients should never persist sessions or auto-refresh tokens.
