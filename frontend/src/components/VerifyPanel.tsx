@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Search, ShieldAlert, ShieldCheck, RefreshCw, SearchX } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
-export function VerifyPanel() {
+export function VerifyPanel({ onThemeChange }: { onThemeChange?: (theme: "theme-lime" | "theme-red" | "theme-amber" | "") => void }) {
   const [file, setFile] = useState<File | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [isVerifying, setIsVerifying] = useState(false);
@@ -120,11 +120,21 @@ export function VerifyPanel() {
   const reset = () => {
     setFile(null);
     setResult(null);
+    onThemeChange?.("");
   };
 
   const isNotFound = result?.status === "NOT_REGISTERED";
   const isAuthentic = result?.status === "VERIFIED_ORIGINAL" || result?.tamperLevel === "IDENTICAL" || result?.tamperLevel === "LIKELY_ORIGINAL";
   const isTampered = result && !isNotFound && !isAuthentic;
+
+  // React to result changes and update theme
+  useEffect(() => {
+    if (!onThemeChange) return;
+    if (!result) onThemeChange("");
+    else if (isNotFound) onThemeChange("theme-amber");
+    else if (isAuthentic) onThemeChange("theme-lime");
+    else onThemeChange("theme-red");
+  }, [result, isNotFound, isAuthentic, onThemeChange]);
 
   let wrapperClasses = "w-full max-w-4xl mx-auto border rounded-xl p-6 md:p-10 transition-colors duration-700 shadow-2xl relative overflow-hidden ";
   if (isTampered) {
