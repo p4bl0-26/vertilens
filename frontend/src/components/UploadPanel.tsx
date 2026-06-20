@@ -45,10 +45,10 @@ export function UploadPanel() {
       setHash(data.data.sha256);
       setAssetId(data.data.assetId);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
       console.error("Upload error:", err);
       setErrorMsg(err.message || "An error occurred during upload");
-      // Do not reset the file, otherwise the error message is never seen by the user
-      // setFile(null);
+      // Do not reset the file so the error message stays visible
     } finally {
       setIsUploading(false);
     }
