@@ -61,7 +61,7 @@ export function UploadPanel() {
           onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
           onDragLeave={() => setIsDragging(false)}
           onDrop={handleDrop}
-          className={`flex flex-col items-center justify-center h-64 border border-dashed transition-all cursor-pointer rounded-lg ${
+          className={`flex flex-col items-center justify-center h-80 border border-dashed transition-all cursor-pointer rounded-lg ${
             isDragging ? "border-lime-500 bg-lime-500/5 shadow-[inset_0_0_20px_rgba(132,204,22,0.1)]" : "border-zinc-800 hover:border-lime-500/50 bg-black"
           }`}
           onClick={() => {
@@ -77,22 +77,22 @@ export function UploadPanel() {
             input.click();
           }}
         >
-          <UploadCloud className={`w-12 h-12 mb-4 transition-colors ${isDragging ? "text-lime-500" : "text-lime-500/70 drop-shadow-[0_0_8px_rgba(132,204,22,0.4)]"}`} strokeWidth={1.5} />
-          <h3 className="text-white text-lg font-medium mb-1">Upload Digital Asset</h3>
-          <p className="text-zinc-500 text-sm">Drag and drop, or click to browse</p>
+          <UploadCloud className={`w-20 h-20 mb-6 transition-colors ${isDragging ? "text-lime-500" : "text-lime-500/70 drop-shadow-[0_0_8px_rgba(132,204,22,0.4)]"}`} strokeWidth={1.5} />
+          <h3 className="text-white text-2xl font-medium mb-2">Upload Digital Asset</h3>
+          <p className="text-zinc-500 text-base">Drag and drop, or click to browse</p>
         </div>
       ) : (
         <div className="flex flex-col items-center">
           <div className="w-full flex items-center p-5 bg-black border border-zinc-800 rounded-lg mb-8">
-            <FileText className="w-8 h-8 text-lime-500 mr-4 drop-shadow-[0_0_8px_rgba(132,204,22,0.4)]" strokeWidth={1.5} />
+            <FileText className="w-12 h-12 text-lime-500 mr-5 drop-shadow-[0_0_8px_rgba(132,204,22,0.4)]" strokeWidth={1.5} />
             <div className="flex-1 overflow-hidden text-left">
-              <p className="text-zinc-200 font-medium truncate">{file.name}</p>
-              <p className="text-zinc-500 text-sm">
+              <p className="text-zinc-200 text-xl font-medium truncate">{file.name}</p>
+              <p className="text-zinc-500 text-base">
                 {(file.size / 1024 / 1024).toFixed(2)} MB
               </p>
             </div>
             {hash ? (
-              <CheckCircle2 className="w-6 h-6 text-lime-500 drop-shadow-[0_0_5px_rgba(132,204,22,0.5)]" />
+              <CheckCircle2 className="w-10 h-10 text-lime-500 drop-shadow-[0_0_5px_rgba(132,204,22,0.5)]" />
             ) : (
               <div className="w-5 h-5 border-2 border-zinc-800 border-t-lime-500 rounded-full animate-spin" />
             )}
@@ -100,7 +100,7 @@ export function UploadPanel() {
 
           <div className="w-full mb-8">
             <div className="w-full bg-black border border-zinc-800 rounded-lg p-5 flex items-center justify-between min-h-[64px]">
-              <span className="text-zinc-500 text-sm font-medium">Cryptographic Fingerprint</span>
+              <span className="text-zinc-500 text-base font-medium">Cryptographic Fingerprint</span>
               {hash ? (
                 <span className="font-mono text-lime-400 tracking-wider break-all text-right drop-shadow-[0_0_2px_rgba(132,204,22,0.8)]">{hash}</span>
               ) : isUploading ? (

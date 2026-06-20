@@ -89,7 +89,7 @@ export function VerifyPanel() {
             onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
             onDragLeave={() => setIsDragging(false)}
             onDrop={handleDrop}
-            className={`flex flex-col items-center justify-center h-64 border border-dashed transition-all cursor-pointer rounded-lg ${
+            className={`flex flex-col items-center justify-center h-80 border border-dashed transition-all cursor-pointer rounded-lg ${
               isDragging ? "border-lime-500 bg-lime-500/5 shadow-[inset_0_0_20px_rgba(132,204,22,0.1)]" : "border-zinc-800 hover:border-lime-500/50 bg-black"
             }`}
             onClick={() => {
@@ -105,9 +105,9 @@ export function VerifyPanel() {
               input.click();
             }}
           >
-            <Search className={`w-12 h-12 mb-4 transition-colors ${isDragging ? "text-lime-500" : "text-lime-500/70 drop-shadow-[0_0_8px_rgba(132,204,22,0.4)]"}`} strokeWidth={1.5} />
-            <h3 className="text-white text-lg font-medium mb-1">Inspect Provenance</h3>
-            <p className="text-zinc-500 text-sm">Upload a file to run cryptographic & perceptual checks</p>
+            <Search className={`w-20 h-20 mb-6 transition-colors ${isDragging ? "text-lime-500" : "text-lime-500/70 drop-shadow-[0_0_8px_rgba(132,204,22,0.4)]"}`} strokeWidth={1.5} />
+            <h3 className="text-white text-2xl font-medium mb-2">Inspect Provenance</h3>
+            <p className="text-zinc-500 text-base">Upload a file to run cryptographic & perceptual checks</p>
           </motion.div>
         ) : isVerifying ? (
           <motion.div
@@ -115,11 +115,11 @@ export function VerifyPanel() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="flex flex-col items-center justify-center h-64 border border-zinc-800 bg-black rounded-lg"
+            className="flex flex-col items-center justify-center h-80 border border-zinc-800 bg-black rounded-lg"
           >
-            <div className="w-14 h-14 border-[3px] border-zinc-800 border-t-lime-500 rounded-full animate-spin mb-6 shadow-[0_0_15px_rgba(132,204,22,0.2)]" />
-            <p className="text-zinc-200 font-medium tracking-wide">Validating Asset...</p>
-            <p className="text-lime-500 text-xs font-mono mt-2 drop-shadow-[0_0_5px_rgba(132,204,22,0.8)]">Computing Proof Score Algorithm</p>
+            <div className="w-20 h-20 border-[4px] border-zinc-800 border-t-lime-500 rounded-full animate-spin mb-6 shadow-[0_0_15px_rgba(132,204,22,0.2)]" />
+            <p className="text-zinc-200 text-xl font-medium tracking-wide">Validating Asset...</p>
+            <p className="text-lime-500 text-sm font-mono mt-2 drop-shadow-[0_0_5px_rgba(132,204,22,0.8)]">Computing Proof Score Algorithm</p>
           </motion.div>
         ) : (
           <motion.div
@@ -130,13 +130,13 @@ export function VerifyPanel() {
           >
             {errorMsg ? (
               <div className="w-full bg-red-950/10 border border-red-500/30 rounded-lg p-10 text-center">
-                <ShieldAlert className="w-20 h-20 text-red-500 mx-auto mb-6" strokeWidth={1.5} />
+                <ShieldAlert className="w-32 h-32 text-red-500 mx-auto mb-8" strokeWidth={1.5} />
                 <h3 className="text-xl font-bold text-white mb-3 tracking-tight">Error</h3>
                 <p className="text-zinc-400">{errorMsg}</p>
               </div>
             ) : !result?.isRegistered ? (
               <div className="w-full bg-zinc-950/50 border border-zinc-800 rounded-lg p-10 text-center shadow-[0_0_30px_rgba(255,255,255,0.02)]">
-                <Search className="w-20 h-20 text-zinc-500 mx-auto mb-6 opacity-50" strokeWidth={1.5} />
+                <Search className="w-32 h-32 text-zinc-500 mx-auto mb-8 opacity-50" strokeWidth={1.5} />
                 <h3 className="text-2xl font-bold text-white mb-3 tracking-tight">Not Found</h3>
                 <p className="text-zinc-400 text-base max-w-md mx-auto">
                   This asset is not registered in the provenance database.
@@ -145,7 +145,7 @@ export function VerifyPanel() {
             ) : result.tamperLevel === "IDENTICAL" || result.tamperLevel === "LIKELY_ORIGINAL" ? (
               <div className="w-full bg-lime-950/10 border border-lime-500/30 rounded-lg p-10 text-center relative overflow-hidden shadow-[0_0_30px_rgba(132,204,22,0.05)]">
                 <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-lime-600 to-lime-400" />
-                <ShieldCheck className="w-20 h-20 text-lime-500 mx-auto mb-6 drop-shadow-[0_0_15px_rgba(132,204,22,0.6)]" strokeWidth={1.5} />
+                <ShieldCheck className="w-32 h-32 text-lime-500 mx-auto mb-8 drop-shadow-[0_0_15px_rgba(132,204,22,0.6)]" strokeWidth={1.5} />
                 <h3 className="text-3xl font-bold text-white mb-3 tracking-tight">Expert Validation Passed</h3>
                 <p className="text-zinc-400 text-base mb-6 max-w-md mx-auto">
                   {explanation || "Exact cryptographic match found on the blockchain. The asset is a verified original."}
@@ -164,7 +164,7 @@ export function VerifyPanel() {
             ) : (
               <div className="w-full bg-red-950/10 border border-red-500/30 rounded-lg p-10 text-center relative overflow-hidden shadow-[0_0_30px_rgba(239,68,68,0.05)]">
                 <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-600 to-red-400" />
-                <ShieldAlert className="w-20 h-20 text-red-500 mx-auto mb-6 drop-shadow-[0_0_15px_rgba(239,68,68,0.6)]" strokeWidth={1.5} />
+                <ShieldAlert className="w-32 h-32 text-red-500 mx-auto mb-8 drop-shadow-[0_0_15px_rgba(239,68,68,0.6)]" strokeWidth={1.5} />
                 <h3 className="text-3xl font-bold text-white mb-3 tracking-tight">Validation Failed</h3>
                 <p className="text-zinc-400 text-base mb-6 max-w-md mx-auto">
                   {explanation || "The Proof Score Algorithm shows strong perceptual similarity to a registered asset, indicating unauthorised modification."}

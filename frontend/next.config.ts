@@ -19,10 +19,18 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: false,
   },
 
-  /** Fix for @metamask/sdk webpack crash (RainbowKit dependency) */
-  webpack: (config) => {
+  /** Fix for @metamask/sdk and walletconnect webpack warnings */
+  webpack: (config, { isServer }) => {
     config.resolve.fallback = {
       ...config.resolve.fallback,
+      "utf-8-validate": false,
+      "bufferutil": false,
+      "pino-pretty": false,
+      "lokijs": false,
+      "encoding": false,
+    };
+    config.resolve.alias = {
+      ...config.resolve.alias,
       "@react-native-async-storage/async-storage": false,
     };
     return config;

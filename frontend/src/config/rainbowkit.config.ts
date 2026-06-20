@@ -39,8 +39,8 @@ export const RAINBOWKIT_APP_INFO = {
 // ─────────────────────────────────────────────────────────────────────────────
 
 const _darkBase = darkTheme({
-  accentColor:           "#7C3AED",
-  accentColorForeground: "#FFFFFF",
+  accentColor:           "#84CC16",
+  accentColorForeground: "#000000",
   borderRadius:          "large",
   fontStack:             "system",
   overlayBlur:           "small",
@@ -69,10 +69,10 @@ export const nexoraDarkTheme: Theme = {
   },
   shadows: {
     ..._darkBase.shadows,
-    connectButton:        "0 4px 24px rgba(124, 58, 237, 0.25)",
+    connectButton:        "0 4px 24px rgba(132, 204, 22, 0.25)",
     dialog:               "0 8px 64px rgba(0, 0, 0, 0.8)",
     profileDetailsAction: "0 2px 8px rgba(0, 0, 0, 0.5)",
-    selectedOption:       "0 2px 8px rgba(124, 58, 237, 0.3)",
+    selectedOption:       "0 2px 8px rgba(132, 204, 22, 0.3)",
   },
 };
 
@@ -80,8 +80,8 @@ export const nexoraDarkTheme: Theme = {
  * Nexora light theme — for future light-mode support.
  */
 const _lightBase = lightTheme({
-  accentColor:           "#7C3AED",
-  accentColorForeground: "#FFFFFF",
+  accentColor:           "#84CC16",
+  accentColorForeground: "#000000",
   borderRadius:          "large",
   fontStack:             "system",
   overlayBlur:           "small",

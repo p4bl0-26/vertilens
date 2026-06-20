@@ -16,7 +16,7 @@ export function QRDisplay({ assetId }: { assetId: string }) {
       </div>
       
       {/* Placeholder QR Code visual */}
-      <div className="w-48 h-48 bg-white rounded-xl p-4 flex items-center justify-center shadow-inner">
+      <div className="w-64 h-64 bg-white rounded-xl p-6 flex items-center justify-center shadow-inner">
         <QrCode className="w-full h-full text-slate-900" />
       </div>
 

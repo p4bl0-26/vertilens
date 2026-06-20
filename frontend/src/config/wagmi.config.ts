@@ -10,11 +10,6 @@
  */
 
 import { createConfig, http, webSocket, fallback } from "wagmi";
-import {
-  injected,
-  coinbaseWallet,
-  walletConnect,
-} from "wagmi/connectors";
 
 import { SUPPORTED_CHAINS } from "./chains.config";
 
@@ -74,28 +69,16 @@ function buildTransport(chainId: number) {
 // Connectors
 // ─────────────────────────────────────────────────────────────────────────────
 
-// NOTE: `shimDisconnect` was removed in wagmi v2 — injected() takes no options that include it.
-const connectors = [
-  injected(),
-  coinbaseWallet({
-    appName:    process.env.NEXT_PUBLIC_APP_NAME ?? "Nexora",
-    appLogoUrl: `${process.env.NEXT_PUBLIC_APP_URL ?? ""}/logo.svg`,
-  }),
-  ...(WALLETCONNECT_PROJECT_ID
-    ? [
-        walletConnect({
-          projectId: WALLETCONNECT_PROJECT_ID,
-          metadata: {
-            name:        process.env.NEXT_PUBLIC_APP_NAME ?? "Nexora",
-            description: process.env.NEXT_PUBLIC_APP_DESC ?? "Digital Content Provenance & Authenticity Verification",
-            url:         process.env.NEXT_PUBLIC_APP_URL  ?? "https://nexora.xyz",
-            icons:       [`${process.env.NEXT_PUBLIC_APP_URL ?? ""}/logo.svg`],
-          },
-          showQrModal: false, // RainbowKit handles the modal
-        }),
-      ]
-    : []),
-];
+import { connectorsForWallets } from "@rainbow-me/rainbowkit";
+import { RAINBOWKIT_WALLETS } from "./rainbowkit.config";
+
+const connectors = connectorsForWallets(
+  RAINBOWKIT_WALLETS,
+  {
+    appName: process.env.NEXT_PUBLIC_APP_NAME ?? "Nexora",
+    projectId: WALLETCONNECT_PROJECT_ID,
+  }
+);
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Transport map
@@ -113,7 +96,7 @@ export const wagmiConfig = createConfig({
   chains:     SUPPORTED_CHAINS,
   connectors,
   transports,
-  ssr:        true, // Required for Next.js App Router
+  ssr:        false, // Disabled to prevent hydration mismatch
   batch: {
     multicall: {
       batchSize: 1_024,  // Max bytes per multicall batch

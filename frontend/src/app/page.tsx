@@ -10,6 +10,8 @@ import {
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import { UploadPanel } from "@/components/UploadPanel";
 import { VerifyPanel } from "@/components/VerifyPanel";
+import { ConnectButton, useConnectModal } from "@rainbow-me/rainbowkit";
+import { useAccount } from "wagmi";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function FloatingParticle({ Icon, top, left, right, size, speed, opacity, blur, color = "text-lime-500" }: any) {
@@ -36,9 +38,11 @@ function FloatingParticle({ Icon, top, left, right, size, speed, opacity, blur, 
 export default function HomePage() {
   const [activeTab, setActiveTab] = useState<"register" | "verify">("register");
   const [showSplash, setShowSplash] = useState(true);
+  const { openConnectModal } = useConnectModal();
+  const { isConnected } = useAccount();
 
   useEffect(() => {
-    // Hide the splash screen after 2.5 seconds to allow the animation to play
+    // Hide the splash screen after 2.8 seconds to allow the animation to play
     const timer = setTimeout(() => setShowSplash(false), 2800);
     return () => clearTimeout(timer);
   }, []);
@@ -170,7 +174,9 @@ export default function HomePage() {
             <div className="absolute inset-0 bg-[url('https://transparenttextures.com/patterns/cubes.png')] opacity-10" />
             
             {/* Massive Fingerprint Watermark representing Provenance */}
-            <Fingerprint className="w-[32rem] h-[32rem] text-lime-500 opacity-[0.03] drop-shadow-[0_0_15px_rgba(132,204,22,0.8)]" strokeWidth={0.5} />
+            <div className="w-[40rem] h-[40rem] flex items-center justify-center">
+              <Fingerprint className="w-full h-full text-lime-500 opacity-[0.05] drop-shadow-[0_0_20px_rgba(132,204,22,0.8)]" strokeWidth={0.5} />
+            </div>
             
             {/* Fading gradient so the bottom of the oval blends smoothly into pure black */}
             <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/80 to-black" />
@@ -183,15 +189,6 @@ export default function HomePage() {
         <div className="flex items-center gap-3">
           <img src="/logo.png" alt="Veritas Logo" className="w-10 h-10 drop-shadow-[0_0_15px_rgba(132,204,22,0.4)]" />
           <span className="text-xl font-bold tracking-tight">Veritas</span>
-        </div>
-        
-        <div className="hidden md:flex items-center gap-8 text-sm text-zinc-400 font-medium">
-          <Link href="/about" className="hover:text-white transition-colors">About Architecture</Link>
-          <a href="https://github.com" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">GitHub</a>
-        </div>
-
-        <div>
-          {/* Connect Wallet removed as requested */}
         </div>
       </nav>
 
@@ -232,10 +229,11 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Minimalist Toggle Switch */}
+        {/* Minimalist Toggle Switch & Connect Wallet */}
         <div className="w-full max-w-4xl flex flex-col items-center">
-          <div className="flex p-1 bg-zinc-900/50 rounded-lg mb-10 border border-zinc-800 backdrop-blur-md">
-            <button
+          <div className="flex items-center mb-10">
+            <div className="flex p-1 bg-zinc-900/50 rounded-lg border border-zinc-800 backdrop-blur-md">
+              <button
               onClick={() => setActiveTab("register")}
               className={`relative px-8 py-2.5 rounded-md text-sm font-medium transition-colors ${
                 activeTab === "register" ? "text-black" : "text-zinc-500 hover:text-white"
@@ -258,6 +256,18 @@ export default function HomePage() {
               <span className="relative z-10">Verify Authenticity</span>
             </button>
           </div>
+
+          <div className="ml-4">
+            <ConnectButton 
+              chainStatus="icon" 
+              showBalance={false} 
+              accountStatus={{
+                smallScreen: 'avatar',
+                largeScreen: 'full',
+              }}
+            />
+          </div>
+        </div>
 
           {/* Tab Content Area with Web3 Decorations */}
           <div className="w-full relative min-h-[400px]">
@@ -318,8 +328,9 @@ export default function HomePage() {
         </div>
       </div>
 
-      <footer className="w-full py-6 text-center text-sm text-slate-600 border-t border-slate-900 mt-auto relative z-10">
-        <p>Veritas · Nexora &apos;26 Hackathon</p>
+      <footer className="w-full py-6 flex flex-col items-center gap-3 text-sm text-slate-600 border-t border-slate-900 mt-auto relative z-10">
+        <Link href="/about" className="hover:text-lime-500 text-zinc-400 transition-colors">About Architecture</Link>
+        <p>Veritas</p>
       </footer>
     </main>
   );
