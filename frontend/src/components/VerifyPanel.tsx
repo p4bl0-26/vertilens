@@ -122,8 +122,30 @@ export function VerifyPanel() {
     setResult(null);
   };
 
+  const isNotFound = result?.status === "NOT_REGISTERED";
+  const isAuthentic = result?.status === "VERIFIED_ORIGINAL" || result?.tamperLevel === "IDENTICAL" || result?.tamperLevel === "LIKELY_ORIGINAL";
+  const isTampered = result && !isNotFound && !isAuthentic;
+
+  let wrapperClasses = "w-full max-w-4xl mx-auto border rounded-xl p-6 md:p-10 transition-colors duration-700 shadow-2xl relative overflow-hidden ";
+  if (isTampered) {
+    wrapperClasses += "bg-[#1a0505] border-red-500/50 shadow-[0_0_50px_rgba(239,68,68,0.15)]";
+  } else if (isNotFound) {
+    wrapperClasses += "bg-[#0a0a0a] border-amber-500/30 hover:border-amber-500/50 shadow-[0_0_30px_rgba(245,158,11,0.1)]";
+  } else if (isAuthentic) {
+    wrapperClasses += "bg-[#0a0a0a] border-lime-500/30 hover:border-lime-500/50 shadow-[0_0_30px_rgba(132,204,22,0.1)]";
+  } else {
+    wrapperClasses += "bg-[#0a0a0a] border-zinc-800 hover:border-lime-500/30";
+  }
+
+  const similarity = result?.hammingDistance !== undefined 
+    ? ((256 - result.hammingDistance) / 256 * 100).toFixed(1)
+    : "0.0";
+  const tamperConfidence = result?.hammingDistance !== undefined
+    ? (100 - parseFloat(similarity)).toFixed(1)
+    : "100.0";
+
   return (
-    <div className="w-full max-w-3xl mx-auto bg-[#0a0a0a] border border-zinc-800 rounded-xl p-10 hover:border-lime-500/30 transition-colors duration-500 shadow-2xl">
+    <div className={wrapperClasses}>
       <AnimatePresence mode="wait">
         {!file ? (
           <motion.div
@@ -272,17 +294,108 @@ export function VerifyPanel() {
                 </div>
               </div>
             ) : (
-              <div className="w-full bg-red-950/10 border border-red-500/30 rounded-lg p-10 text-center relative overflow-hidden shadow-[0_0_30px_rgba(239,68,68,0.05)]">
-                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-600 to-red-400" />
-                <ShieldAlert className="w-32 h-32 text-red-500 mx-auto mb-8 drop-shadow-[0_0_15px_rgba(239,68,68,0.6)]" strokeWidth={1.5} />
-                <h3 className="text-3xl font-bold text-white mb-3 tracking-tight">Validation Failed</h3>
-                <p className="text-zinc-400 text-base mb-6 max-w-md mx-auto">
-                  {explanation || "The Proof Score Algorithm shows strong perceptual similarity to a registered asset, indicating unauthorised modification."}
-                </p>
-                <div className="inline-block bg-black border border-zinc-800 rounded-lg p-5 text-left w-full max-w-sm hover:border-red-500/30 transition-colors">
-                  <div>
-                    <span className="text-zinc-500 text-xs font-medium block mb-1">Anomaly Detected</span>
-                    <span className="font-mono text-sm text-red-400 drop-shadow-[0_0_2px_rgba(239,68,68,0.5)]">Hamming Distance: {result.hammingDistance} / 256 bits</span>
+              <div className="w-full text-center relative z-10">
+                {/* Decorative Side Labels (Red Theme) */}
+                <div className="hidden md:flex absolute -left-12 top-0 flex-col items-end gap-6 opacity-60">
+                  <div className="flex items-center gap-3">
+                    <span className="text-[10px] font-mono text-red-500 tracking-widest animate-pulse">SECURITY_ALERT</span>
+                    <div className="w-16 h-[1px] bg-gradient-to-l from-red-500 to-transparent" />
+                  </div>
+                  <div className="flex items-center gap-3 mt-4">
+                    <span className="text-[10px] font-mono text-red-500 tracking-widest">INTEGRITY_BREACH</span>
+                    <div className="w-8 h-[1px] bg-gradient-to-l from-red-500 to-transparent" />
+                  </div>
+                  <div className="flex items-center gap-3 mt-4">
+                    <span className="text-[10px] font-mono text-red-500 tracking-widest">AI_FORENSICS</span>
+                    <div className="w-12 h-[1px] bg-gradient-to-l from-red-500 to-transparent" />
+                  </div>
+                </div>
+
+                <div className="relative inline-block mx-auto mb-6">
+                   <div className="absolute inset-0 bg-red-600/30 blur-[30px] rounded-full animate-[pulse_2s_ease-in-out_infinite]" />
+                   <ShieldAlert className="w-32 h-32 text-red-500 drop-shadow-[0_0_20px_rgba(239,68,68,0.8)] relative z-10 animate-pulse" strokeWidth={1.5} />
+                </div>
+                
+                <h3 className="text-4xl font-black text-white mb-2 tracking-tighter drop-shadow-[0_0_10px_rgba(239,68,68,0.5)] uppercase">CONTENT INTEGRITY COMPROMISED</h3>
+                <div className="inline-block bg-red-500/20 text-red-400 border border-red-500/50 px-4 py-1 rounded-full text-sm font-bold tracking-widest mb-8 animate-pulse uppercase shadow-[0_0_15px_rgba(239,68,68,0.4)]">
+                  Severity: HIGH
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-3xl mx-auto text-left relative z-10">
+                  
+                  {/* Confidence Metrics */}
+                  <div className="bg-black/80 backdrop-blur-md border border-red-500/30 rounded-lg p-6 shadow-[0_0_20px_rgba(239,68,68,0.1)] relative overflow-hidden">
+                    <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-red-600 to-red-400 opacity-50" />
+                    <h4 className="text-red-500 text-sm font-bold mb-5 flex items-center gap-2">
+                      <div className="w-2 h-2 rounded-full bg-red-500 animate-ping" />
+                      Forensic Metrics
+                    </h4>
+                    
+                    <div className="space-y-5">
+                      <div>
+                        <div className="flex justify-between text-xs mb-1">
+                          <span className="text-zinc-400 font-medium uppercase tracking-wider">Similarity to Original</span>
+                          <span className="font-mono text-zinc-300">{similarity}%</span>
+                        </div>
+                        <div className="w-full bg-zinc-900 rounded-full h-1.5">
+                          <div className="bg-zinc-500 h-1.5 rounded-full" style={{ width: `${similarity}%` }}></div>
+                        </div>
+                      </div>
+
+                      <div>
+                        <div className="flex justify-between text-xs mb-1">
+                          <span className="text-zinc-400 font-medium uppercase tracking-wider">Tampering Confidence</span>
+                          <span className="font-mono text-red-400">{tamperConfidence}%</span>
+                        </div>
+                        <div className="w-full bg-red-950 rounded-full h-1.5 overflow-hidden">
+                          <div className="bg-red-500 h-1.5 rounded-full shadow-[0_0_10px_rgba(239,68,68,0.8)]" style={{ width: `${tamperConfidence}%` }}></div>
+                        </div>
+                      </div>
+
+                      <div className="pt-2 border-t border-red-500/20">
+                        <span className="text-zinc-500 text-[10px] font-medium block mb-1 uppercase tracking-wider">Hamming Distance</span>
+                        <span className="font-mono text-sm text-red-400 drop-shadow-[0_0_2px_rgba(239,68,68,0.5)]">{result.hammingDistance} / 256 bits altered</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Blockchain Context */}
+                  <div className="bg-black/80 backdrop-blur-md border border-red-500/30 rounded-lg p-6 shadow-[0_0_20px_rgba(239,68,68,0.1)] relative overflow-hidden flex flex-col justify-center">
+                     <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-red-600 to-red-400 opacity-50" />
+                     <div className="space-y-4">
+                       <div className="flex items-start gap-3">
+                         <ShieldCheck className="w-5 h-5 text-zinc-500 mt-0.5" />
+                         <div>
+                           <p className="text-sm font-medium text-zinc-300">Blockchain Record Found</p>
+                           <p className="text-xs text-zinc-500">Asset {result.matchedAsset?.id?.slice(0, 8)}... located on Monad Testnet</p>
+                         </div>
+                       </div>
+                       <div className="flex items-start gap-3">
+                         <Search className="w-5 h-5 text-zinc-500 mt-0.5" />
+                         <div>
+                           <p className="text-sm font-medium text-zinc-300">Original Asset Located</p>
+                           <p className="text-xs text-zinc-500">Provenance DB match successful</p>
+                         </div>
+                       </div>
+                       <div className="flex items-start gap-3 pt-2 border-t border-red-500/20">
+                         <ShieldAlert className="w-5 h-5 text-red-500 mt-0.5 animate-pulse" />
+                         <div>
+                           <p className="text-sm font-bold text-red-400">Fingerprint Mismatch</p>
+                           <p className="text-xs text-red-500/70">Uploaded content does not match registered cryptographic footprint.</p>
+                         </div>
+                       </div>
+                     </div>
+                  </div>
+
+                  {/* AI Forensic Analysis (Spans Full Width) */}
+                  <div className="md:col-span-2 bg-red-950/20 border border-red-500/40 rounded-lg p-6 shadow-[inset_0_0_20px_rgba(239,68,68,0.05)] relative">
+                    <h4 className="text-red-500 text-sm font-bold mb-3 flex items-center gap-2 uppercase tracking-widest">
+                      <div className="w-1.5 h-4 bg-red-500" />
+                      AI Forensic Analysis
+                    </h4>
+                    <div className="text-zinc-300 text-sm leading-relaxed">
+                      {explanation || "Analyzing structural deviations... Unauthorised modification detected based on perceptual distance metrics."}
+                    </div>
                   </div>
                 </div>
               </div>
