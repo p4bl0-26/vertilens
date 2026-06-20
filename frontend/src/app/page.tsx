@@ -280,29 +280,34 @@ export default function HomePage() {
           <div className="w-full relative min-h-[400px]">
             
             {/* Left Side Web3 Elements */}
-            <div className="hidden lg:flex absolute -left-32 top-12 flex-col items-end gap-6 opacity-60">
+            <div className="hidden lg:flex absolute -left-36 top-12 flex-col items-end gap-6 opacity-60">
               <div className="flex items-center gap-3">
                 <span className="text-xs font-mono text-brand-500">MONAD_TESTNET</span>
                 <div className="w-16 h-[1px] bg-gradient-to-l from-brand-500 to-transparent" />
               </div>
-              <div className="flex items-center gap-3 mt-10">
-                <span className="text-xs font-mono text-zinc-500">ZK_PROOF_READY</span>
+              <div className="flex items-center gap-3 mt-6">
+                <span className="text-xs font-mono text-brand-400">SHA256_ACTIVE</span>
+                <div className="w-12 h-[1px] bg-gradient-to-l from-brand-400 to-transparent" />
+              </div>
+              <div className="flex items-center gap-3 mt-6">
+                <span className="text-xs font-mono text-zinc-500">AI_FORENSICS</span>
                 <div className="w-8 h-[1px] bg-gradient-to-l from-zinc-500 to-transparent" />
               </div>
             </div>
 
             {/* Right Side Web3 Elements */}
-            <div className="hidden lg:flex absolute -right-32 top-16 flex-col items-start gap-8 opacity-60">
+            <div className="hidden lg:flex absolute -right-36 top-16 flex-col items-start gap-8 opacity-60">
               <div className="flex items-center gap-3">
                 <div className="w-12 h-[1px] bg-gradient-to-r from-brand-500 to-transparent" />
-                <div className="flex items-center gap-1.5 border border-brand-500/30 bg-brand-500/5 px-2 py-1 rounded text-[10px] font-mono text-brand-400">
-                  <div className="w-1.5 h-1.5 bg-brand-500 rounded-full animate-pulse" />
-                  SECURE_NODE
-                </div>
+                <span className="text-xs font-mono text-brand-500">PROVENANCE_ON</span>
               </div>
-              <div className="flex items-center gap-3 mt-12">
-                <div className="w-20 h-[1px] bg-gradient-to-r from-zinc-500 to-transparent" />
-                <span className="text-xs font-mono text-zinc-500">IPFS_LINKED</span>
+              <div className="flex items-center gap-3 mt-4">
+                <div className="w-16 h-[1px] bg-gradient-to-r from-brand-400 to-transparent" />
+                <span className="text-xs font-mono text-brand-400">BLOCKCHAIN_VERIFIED</span>
+              </div>
+              <div className="flex items-center gap-3 mt-4">
+                <div className="w-8 h-[1px] bg-gradient-to-r from-zinc-500 to-transparent" />
+                <span className="text-xs font-mono text-zinc-500">TRACEABLE</span>
               </div>
             </div>
 

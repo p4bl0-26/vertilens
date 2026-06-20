@@ -8,6 +8,7 @@ export function VerifyPanel({ onThemeChange }: { onThemeChange?: (theme: "theme-
   const [file, setFile] = useState<File | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [isVerifying, setIsVerifying] = useState(false);
+  const [verifyStep, setVerifyStep] = useState(1);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [result, setResult] = useState<any | null>(null);
   const [explanation, setExplanation] = useState<string | null>(null);
@@ -24,9 +25,14 @@ export function VerifyPanel({ onThemeChange }: { onThemeChange?: (theme: "theme-
   const handleFile = async (f: File) => {
     setFile(f);
     setIsVerifying(true);
+    setVerifyStep(1);
     setResult(null);
     setExplanation(null);
     setErrorMsg(null);
+
+    // Simulate pipeline progress for UX while single API executes
+    const t1 = setTimeout(() => setVerifyStep(2), 1500);
+    const t2 = setTimeout(() => setVerifyStep(3), 3500);
 
     const formData = new FormData();
     formData.append("image", f);
@@ -37,6 +43,9 @@ export function VerifyPanel({ onThemeChange }: { onThemeChange?: (theme: "theme-
         method: "POST",
         body: formData,
       });
+      
+      clearTimeout(t1);
+      clearTimeout(t2);
       let verifyData;
       try {
         verifyData = await verifyRes.json();
@@ -50,10 +59,11 @@ export function VerifyPanel({ onThemeChange }: { onThemeChange?: (theme: "theme-
 
       setResult(verifyData.data);
       
-      // If exact match, set explanation manually.
       if (verifyData.data.status === "VERIFIED_ORIGINAL") {
         setExplanation("Exact cryptographic match found on the blockchain. The asset is a verified original.");
+        setIsVerifying(false);
       } else if (verifyData.data.status === "LIKELY_TAMPERED") {
+        setVerifyStep(4);
         setExplanation("Requesting AI forensic analysis...");
         try {
           const matched = verifyData.data.matchedAsset;
@@ -104,15 +114,17 @@ export function VerifyPanel({ onThemeChange }: { onThemeChange?: (theme: "theme-
           } else {
             setExplanation(verifyData.data.tamperDescription || "AI analysis failed.");
           }
-        } catch {
-          setExplanation(verifyData.data.tamperDescription || "AI analysis failed.");
+        } catch (err: any) {
+          console.error("AI Explanation Error:", err);
+          setExplanation("AI Forensic explanation unavailable. The asset exhibits structural differences.");
         }
+        setIsVerifying(false);
+      } else {
+        // NOT_REGISTERED
+        setIsVerifying(false);
       }
-
-    } catch (err: unknown) {
-      console.error("Verification error:", err);
-      setErrorMsg(err instanceof Error ? err.message : "An error occurred during verification");
-    } finally {
+    } catch (err: any) {
+      setErrorMsg(err.message || "An unexpected error occurred.");
       setIsVerifying(false);
     }
   };
@@ -192,11 +204,50 @@ export function VerifyPanel({ onThemeChange }: { onThemeChange?: (theme: "theme-
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="flex flex-col items-center justify-center h-80 border border-zinc-800 bg-black rounded-lg"
+            className="flex flex-col items-center justify-center h-80 border border-brand-500/20 bg-[#0a0a0a] rounded-lg shadow-[0_0_30px_rgba(var(--brand-500),0.05)] relative overflow-hidden"
           >
-            <div className="w-20 h-20 border-[4px] border-zinc-800 border-t-lime-500 rounded-full animate-spin mb-6 shadow-[0_0_15px_rgba(132,204,22,0.2)]" />
-            <p className="text-zinc-200 text-xl font-medium tracking-wide">Validating Asset...</p>
-            <p className="text-lime-500 text-sm font-mono mt-2 drop-shadow-[0_0_5px_rgba(132,204,22,0.8)]">Computing Proof Score Algorithm</p>
+            {/* Animated scanning line */}
+            <motion.div 
+              className="absolute top-0 left-0 w-full h-1 bg-brand-500 shadow-[0_0_15px_rgba(var(--brand-500),1)]"
+              animate={{ top: ["0%", "100%", "0%"] }}
+              transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+            />
+            
+            <div className="w-full max-w-sm px-6">
+              <div className="flex justify-between items-end mb-6">
+                <div>
+                  <h4 className="text-zinc-500 text-xs font-bold tracking-widest uppercase mb-1">Investigation Pipeline</h4>
+                  <div className="text-brand-500 font-mono text-lg font-bold">Step {verifyStep}/4</div>
+                </div>
+                <div className="w-8 h-8 border-[3px] border-zinc-800 border-t-brand-500 rounded-full animate-spin shadow-[0_0_10px_rgba(var(--brand-500),0.3)]" />
+              </div>
+
+              <div className="space-y-4">
+                {[
+                  { id: 1, label: "Generating Fingerprint" },
+                  { id: 2, label: "Checking Blockchain Record" },
+                  { id: 3, label: "Running Similarity Analysis" },
+                  { id: 4, label: "Generating AI Forensic Report" },
+                ].map((step) => (
+                  <div key={step.id} className="flex items-center gap-4">
+                    <div className={`w-5 h-5 rounded-full flex items-center justify-center transition-colors duration-500 ${
+                      verifyStep > step.id ? "bg-brand-500 text-black shadow-[0_0_10px_rgba(var(--brand-500),0.4)]" :
+                      verifyStep === step.id ? "border-2 border-brand-500 text-brand-500 animate-pulse" :
+                      "border-2 border-zinc-800 text-zinc-700"
+                    }`}>
+                      {verifyStep > step.id ? <ShieldCheck className="w-3 h-3" strokeWidth={3} /> : <div className="w-1.5 h-1.5 rounded-full bg-current" />}
+                    </div>
+                    <span className={`text-sm font-medium transition-colors duration-500 ${
+                      verifyStep > step.id ? "text-zinc-300" :
+                      verifyStep === step.id ? "text-brand-400 drop-shadow-[0_0_5px_rgba(var(--brand-500),0.5)]" :
+                      "text-zinc-600"
+                    }`}>
+                      {step.label}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
           </motion.div>
         ) : (
           <motion.div
