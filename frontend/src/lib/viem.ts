@@ -35,13 +35,13 @@ import {
   createWalletClient,
   http,
   defineChain,
-  privateKeyToAccount,
   type PublicClient,
   type WalletClient,
   type Hash,
   type Address,
   type Hex,
 } from "viem";
+import { privateKeyToAccount } from "viem/accounts";
 
 // ─── Environment Validation ───────────────────────────────────────────────────
 

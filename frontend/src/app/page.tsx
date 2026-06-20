@@ -47,7 +47,7 @@ export default function HomePage() {
       </div>
 
       <footer className="w-full py-6 text-center text-sm text-slate-600 border-t border-slate-900 mt-auto">
-        <p>Vertilens · Nexora '26 Hackathon</p>
+        <p>Vertilens · Nexora &apos;26 Hackathon</p>
       </footer>
     </main>
   );

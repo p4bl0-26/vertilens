@@ -190,6 +190,10 @@ export interface Database {
         Update: Partial<AnchorInsert>;
       };
     };
+    Views: Record<string, never>;
+    Functions: Record<string, never>;
+    Enums: Record<string, never>;
+    CompositeTypes: Record<string, never>;
   };
 }
 
@@ -219,13 +223,11 @@ export const STORAGE_FOLDER_ORIGINALS = "originals" as const;
  * import { supabaseBrowser } from "@/lib/supabase";
  * const { data } = await supabaseBrowser.from("assets").select("*");
  */
-export const supabaseBrowser: SupabaseClient<Database> = createClient<Database>(
+export const supabaseBrowser: SupabaseClient<any, "public", any> = createClient<any, "public", any>(
   SUPABASE_URL,
   SUPABASE_ANON_KEY,
   {
     auth: {
-      // For our MVP we are not using user authentication.
-      // Disable auto-refresh and session persistence to avoid unnecessary overhead.
       persistSession: false,
       autoRefreshToken: false,
     },
@@ -245,7 +247,7 @@ export const supabaseBrowser: SupabaseClient<Database> = createClient<Database>(
  * We use a factory function (not a singleton) because Next.js Route Handlers
  * can run across multiple edge instances where shared module-level state is unsafe.
  *
- * @returns {SupabaseClient<Database>} An admin Supabase client instance.
+ * @returns {SupabaseClient<any, "public", any>} An admin Supabase client instance.
  * @throws {Error} If SUPABASE_SERVICE_ROLE_KEY is not set in the environment.
  *
  * @example
@@ -254,7 +256,7 @@ export const supabaseBrowser: SupabaseClient<Database> = createClient<Database>(
  * const supabase = createAdminClient();
  * const { data, error } = await supabase.from("assets").insert([...]);
  */
-export function createAdminClient(): SupabaseClient<Database> {
+export function createAdminClient(): SupabaseClient<any, "public", any> {
   if (!SUPABASE_SERVICE_ROLE_KEY) {
     throw new Error(
       "[supabase] Missing env var: SUPABASE_SERVICE_ROLE_KEY. " +
@@ -263,7 +265,7 @@ export function createAdminClient(): SupabaseClient<Database> {
     );
   }
 
-  return createClient<Database>(SUPABASE_URL!, SUPABASE_SERVICE_ROLE_KEY, {
+  return createClient<any, "public", any>(SUPABASE_URL!, SUPABASE_SERVICE_ROLE_KEY, {
     auth: {
       // Server-side clients should never persist sessions or auto-refresh tokens.
       // Each Route Handler invocation is stateless.
