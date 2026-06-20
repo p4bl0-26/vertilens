@@ -48,7 +48,7 @@ export function AnchorButton({ hash, assetId, disabled, onSuccess }: AnchorButto
         <div className="w-full p-4 bg-lime-500/10 border border-lime-500/30 rounded-lg text-center">
           <p className="text-lime-400 font-medium mb-1 drop-shadow-[0_0_2px_rgba(132,204,22,0.8)]">Credibility Minted</p>
           <a
-            href={`https://explorer.monad-testnet.com/tx/${txHash}`}
+            href={`https://testnet.monadexplorer.com/tx/${txHash}`}
             target="_blank"
             rel="noreferrer"
             className="text-sm text-zinc-400 hover:text-lime-400 transition-colors flex items-center justify-center gap-1"

@@ -44,26 +44,14 @@ export function VerifyPanel() {
       }
 
       setResult(verifyData.data);
-
-      // 2. Fetch AI Explanation if asset is registered
-      if (verifyData.data.isRegistered) {
-        const explainRes = await fetch("/api/explain", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            originalAsset: verifyData.data.originalAsset,
-            uploadedAsset: verifyData.data.uploadedAsset,
-            hammingDistance: verifyData.data.hammingDistance,
-            tamperLevel: verifyData.data.tamperLevel,
-          }),
-        });
-        const explainData = await explainRes.json();
-        
-        if (explainRes.ok && explainData.success) {
-          setExplanation(explainData.data.explanation);
-        }
+      
+      // If exact match, set explanation manually.
+      if (verifyData.data.status === "VERIFIED_ORIGINAL") {
+        setExplanation("Exact cryptographic match found on the blockchain. The asset is a verified original.");
+      } else if (verifyData.data.status === "LIKELY_TAMPERED") {
+        setExplanation(verifyData.data.tamperDescription || "The Proof Score Algorithm shows strong perceptual similarity to a registered asset, indicating unauthorised modification.");
       }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     } catch (err: any) {
       console.error("Verification error:", err);
       setErrorMsg(err.message || "An error occurred during verification");
@@ -134,7 +122,7 @@ export function VerifyPanel() {
                 <h3 className="text-xl font-bold text-white mb-3 tracking-tight">Error</h3>
                 <p className="text-zinc-400">{errorMsg}</p>
               </div>
-            ) : !result?.isRegistered ? (
+            ) : result.status === "NOT_REGISTERED" ? (
               <div className="w-full bg-zinc-950/50 border border-zinc-800 rounded-lg p-10 text-center shadow-[0_0_30px_rgba(255,255,255,0.02)]">
                 <Search className="w-32 h-32 text-zinc-500 mx-auto mb-8 opacity-50" strokeWidth={1.5} />
                 <h3 className="text-2xl font-bold text-white mb-3 tracking-tight">Not Found</h3>
@@ -142,7 +130,7 @@ export function VerifyPanel() {
                   This asset is not registered in the provenance database.
                 </p>
               </div>
-            ) : result.tamperLevel === "IDENTICAL" || result.tamperLevel === "LIKELY_ORIGINAL" ? (
+            ) : result.status === "VERIFIED_ORIGINAL" || result.tamperLevel === "IDENTICAL" || result.tamperLevel === "LIKELY_ORIGINAL" ? (
               <div className="w-full bg-lime-950/10 border border-lime-500/30 rounded-lg p-10 text-center relative overflow-hidden shadow-[0_0_30px_rgba(132,204,22,0.05)]">
                 <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-lime-600 to-lime-400" />
                 <ShieldCheck className="w-32 h-32 text-lime-500 mx-auto mb-8 drop-shadow-[0_0_15px_rgba(132,204,22,0.6)]" strokeWidth={1.5} />
@@ -153,11 +141,11 @@ export function VerifyPanel() {
                 <div className="inline-block bg-black border border-zinc-800 rounded-lg p-5 text-left w-full max-w-sm hover:border-lime-500/30 transition-colors">
                   <div className="mb-3">
                     <span className="text-zinc-500 text-xs font-medium block mb-1">Asset Trace ID</span>
-                    <span className="font-mono text-sm text-lime-400 drop-shadow-[0_0_2px_rgba(132,204,22,0.5)]">{result.originalAsset?.id}</span>
+                    <span className="font-mono text-sm text-lime-400 drop-shadow-[0_0_2px_rgba(132,204,22,0.5)]">{result.matchedAsset?.id}</span>
                   </div>
                   <div>
                     <span className="text-zinc-500 text-xs font-medium block mb-1">Registered On</span>
-                    <span className="font-mono text-sm text-zinc-300">{new Date(result.originalAsset?.registeredAt).toLocaleString()}</span>
+                    <span className="font-mono text-sm text-zinc-300">{new Date(result.matchedAsset?.created_at).toLocaleString()}</span>
                   </div>
                 </div>
               </div>
