@@ -26,7 +26,9 @@ function FloatingParticle({ Icon, top, left, right, size, speed, opacity, blur, 
       }} 
       className={`absolute ${top} opacity-${opacity} ${blur}`}
     >
-      <Icon className={`w-${size} h-${size} ${color} drop-shadow-[0_0_30px_rgba(132,204,22,0.5)]`} strokeWidth={1} />
+      <div className={`w-${size} h-${size} flex items-center justify-center`}>
+        <Icon className={`w-full h-full ${color} drop-shadow-[0_0_30px_rgba(132,204,22,0.5)]`} strokeWidth={1} />
+      </div>
     </motion.div>
   );
 }
