@@ -10,6 +10,7 @@ import {
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import { UploadPanel } from "@/components/UploadPanel";
 import { VerifyPanel } from "@/components/VerifyPanel";
+import { Footer } from "@/components/Footer";
 import { ConnectButton, useConnectModal } from "@rainbow-me/rainbowkit";
 import { useAccount } from "wagmi";
 
@@ -332,10 +333,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      <footer className="w-full py-6 flex flex-col items-center gap-3 text-sm text-slate-600 border-t border-slate-900 mt-auto relative z-10">
-        <Link href="/about" className="hover:text-lime-500 text-zinc-400 transition-colors">About Architecture</Link>
-        <p>Veritas</p>
-      </footer>
+      <Footer />
     </main>
   );
 }
