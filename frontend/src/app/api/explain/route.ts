@@ -65,16 +65,20 @@ const UploadedAssetMetaSchema = z.object({
  * Matches the Asset interface from provenance.types.ts.
  */
 const AssetSchema = z.object({
-  id:           z.string().uuid(),
-  filename:     z.string().min(1).max(512),
-  storagePath:  z.string().min(1),
-  sha256:       z.string().length(64).regex(/^[0-9a-f]+$/, "Must be lowercase hex"),
-  ahash:        z.string().length(64).regex(/^[0-9a-f]+$/, "Must be lowercase hex"),
-  width:        z.number().int().positive().nullable(),
-  height:       z.number().int().positive().nullable(),
-  fileSize:     z.number().int().positive(),
-  imageUrl:     z.string().url(),
-  registeredAt: z.string().datetime({ offset: true }).or(z.string().min(1)),
+  id:              z.string().uuid(),
+  filename:        z.string().min(1).max(512),
+  storagePath:     z.string().min(1),
+  sha256:          z.string().length(64).regex(/^[0-9a-f]+$/, "Must be lowercase hex"),
+  ahash:           z.string().length(64).regex(/^[0-9a-f]+$/, "Must be lowercase hex"),
+  width:           z.number().int().positive().nullable(),
+  height:          z.number().int().positive().nullable(),
+  fileSize:        z.number().int().positive(),
+  imageUrl:        z.string().url(),
+  registeredAt:    z.string().datetime({ offset: true }).or(z.string().min(1)),
+  // On-chain anchor fields — optional/nullable; populated after POST /api/anchor.
+  txHash:          z.string().nullable().optional().default(null),
+  contractAddress: z.string().nullable().optional().default(null),
+  anchoredAt:      z.string().nullable().optional().default(null),
 });
 
 /**

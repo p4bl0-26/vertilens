@@ -1,0 +1,354 @@
+{
+	"compiler": {
+		"version": "0.8.30+commit.73712a01"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "contentHash",
+						"type": "bytes32"
+					}
+				],
+				"name": "HashAlreadyRegistered",
+				"type": "error"
+			},
+			{
+				"inputs": [],
+				"name": "InvalidContentHash",
+				"type": "error"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "contentHash",
+						"type": "bytes32"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "registeredBy",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "timestamp",
+						"type": "uint256"
+					}
+				],
+				"name": "AssetRegistered",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "contentHash",
+						"type": "bytes32"
+					},
+					{
+						"indexed": false,
+						"internalType": "bool",
+						"name": "found",
+						"type": "bool"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "queriedBy",
+						"type": "address"
+					}
+				],
+				"name": "AssetVerified",
+				"type": "event"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "contentHash",
+						"type": "bytes32"
+					}
+				],
+				"name": "anchorHash",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "contentHash",
+						"type": "bytes32"
+					}
+				],
+				"name": "getRecord",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "bytes32",
+								"name": "contentHash",
+								"type": "bytes32"
+							},
+							{
+								"internalType": "address",
+								"name": "registeredBy",
+								"type": "address"
+							},
+							{
+								"internalType": "uint256",
+								"name": "timestamp",
+								"type": "uint256"
+							},
+							{
+								"internalType": "bool",
+								"name": "exists",
+								"type": "bool"
+							}
+						],
+						"internalType": "struct ProvenanceRegistry.ProvenanceRecord",
+						"name": "",
+						"type": "tuple"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "contentHash",
+						"type": "bytes32"
+					}
+				],
+				"name": "isRegistered",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "contentHash",
+						"type": "bytes32"
+					}
+				],
+				"name": "registerAsset",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "totalRegistered",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "contentHash",
+						"type": "bytes32"
+					}
+				],
+				"name": "verifyAsset",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "found",
+						"type": "bool"
+					},
+					{
+						"components": [
+							{
+								"internalType": "bytes32",
+								"name": "contentHash",
+								"type": "bytes32"
+							},
+							{
+								"internalType": "address",
+								"name": "registeredBy",
+								"type": "address"
+							},
+							{
+								"internalType": "uint256",
+								"name": "timestamp",
+								"type": "uint256"
+							},
+							{
+								"internalType": "bool",
+								"name": "exists",
+								"type": "bool"
+							}
+						],
+						"internalType": "struct ProvenanceRegistry.ProvenanceRecord",
+						"name": "record",
+						"type": "tuple"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"author": "Nexora",
+			"events": {
+				"AssetRegistered(bytes32,address,uint256)": {
+					"params": {
+						"contentHash": "The SHA-256 of the content, as bytes32.",
+						"registeredBy": "The wallet that called anchorHash().",
+						"timestamp": "Block timestamp of the registration."
+					}
+				},
+				"AssetVerified(bytes32,bool,address)": {
+					"params": {
+						"contentHash": "The hash that was queried.",
+						"found": "Whether the hash exists in the registry.",
+						"queriedBy": "The wallet that performed the verification."
+					}
+				}
+			},
+			"kind": "dev",
+			"methods": {
+				"anchorHash(bytes32)": {
+					"details": "The `contentHash` must be the keccak/SHA-256 of the original file buffer,      formatted as a bytes32 value. In the frontend, convert using:        `viem.toBytes(sha256HexString)` → then pass as bytes32. Reverts if:   - `contentHash` is bytes32(0) (zero hash — almost certainly a bug).   - The hash has already been registered (idempotency guard). Emits: {AssetRegistered}",
+					"params": {
+						"contentHash": "The 32-byte SHA-256 hash of the digital asset to register."
+					}
+				},
+				"getRecord(bytes32)": {
+					"params": {
+						"contentHash": "The 32-byte SHA-256 hash to look up."
+					},
+					"returns": {
+						"_0": "The ProvenanceRecord struct for the registered asset."
+					}
+				},
+				"isRegistered(bytes32)": {
+					"details": "Gas-cheaper than verifyAsset() when you only need a boolean.      Useful for on-chain composability (e.g., another contract checking      provenance before executing a transfer).",
+					"params": {
+						"contentHash": "The 32-byte SHA-256 hash to check."
+					},
+					"returns": {
+						"_0": "True if the hash is registered, false otherwise."
+					}
+				},
+				"registerAsset(bytes32)": {
+					"params": {
+						"contentHash": "The 32-byte SHA-256 hash to register."
+					}
+				},
+				"verifyAsset(bytes32)": {
+					"details": "This is a VIEW function — it does NOT write state and costs no gas      when called off-chain (e.g., via `viem.readContract()`).      It DOES emit an event to create an auditable verification trail.      NOTE: Events in view functions are not persisted. To log verifications,      call verifyAsset() as a non-view transaction, or handle off-chain.",
+					"params": {
+						"contentHash": "The 32-byte SHA-256 hash to look up."
+					},
+					"returns": {
+						"found": "      True if the hash exists in the registry.",
+						"record": "     The full ProvenanceRecord (zero-valued if not found)."
+					}
+				}
+			},
+			"title": "ProvenanceRegistry",
+			"version": 1
+		},
+		"userdoc": {
+			"errors": {
+				"HashAlreadyRegistered(bytes32)": [
+					{
+						"notice": "Thrown when attempting to anchor a hash that is already registered."
+					}
+				],
+				"InvalidContentHash()": [
+					{
+						"notice": "Thrown when a zero hash is passed to anchorHash()."
+					}
+				]
+			},
+			"events": {
+				"AssetRegistered(bytes32,address,uint256)": {
+					"notice": "Emitted when a new content hash is anchored for the first time."
+				},
+				"AssetVerified(bytes32,bool,address)": {
+					"notice": "Emitted on each call to verifyAsset(), whether or not it succeeds. Useful for building an off-chain audit trail of verification attempts."
+				}
+			},
+			"kind": "user",
+			"methods": {
+				"anchorHash(bytes32)": {
+					"notice": "Anchor a SHA-256 content hash on-chain, permanently recording         the caller as the originator of the content at this block timestamp."
+				},
+				"getRecord(bytes32)": {
+					"notice": "Returns the full provenance record for a given hash.         Reverts if the hash is not registered (use isRegistered() first         if you need a non-reverting check)."
+				},
+				"isRegistered(bytes32)": {
+					"notice": "Quick boolean check — does this hash exist in the registry?"
+				},
+				"registerAsset(bytes32)": {
+					"notice": "Alias for anchorHash(). Provided for semantic clarity —         \"register\" communicates intent at the product layer."
+				},
+				"totalRegistered()": {
+					"notice": "Total number of unique content hashes registered. Useful for dashboard statistics without needing to iterate the mapping."
+				},
+				"verifyAsset(bytes32)": {
+					"notice": "Verify whether a content hash has been registered, and return         its provenance metadata if found."
+				}
+			},
+			"notice": "On-chain registry for digital content provenance on Monad Testnet. HOW IT WORKS:   1. When a user registers an image via POST /api/register, the backend      computes a SHA-256 hash of the raw file bytes.   2. After the Supabase record is saved, the frontend calls anchorHash()      with that hash to write an immutable, timestamped record on-chain.   3. During verification, verifyAsset() is called to confirm the hash      exists in the registry and return the original anchor metadata. DESIGN PRINCIPLES:   - Simplicity first: no access control beyond ownership of the anchor.   - Immutable: anchors cannot be modified or deleted after registration.   - Gas-efficient: uses a mapping for O(1) lookup.   - Event-driven: all writes emit events for off-chain indexing.",
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"ProvenanceRegistry.sol": "ProvenanceRegistry"
+		},
+		"evmVersion": "prague",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"ProvenanceRegistry.sol": {
+			"keccak256": "0x44adc211867561afc695d32227720298d8ce88da81d3c6c0e94f0c143388cb77",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://83a1bb356acd7a9fbe54441fdcc4d69b0e6482035eff78b5ea69d45957501125",
+				"dweb:/ipfs/QmXQwUuM22rWqfbyqhRiNPxFCKT7tH2ivTnVhf1sAzJMzC"
+			]
+		}
+	},
+	"version": 1
+}

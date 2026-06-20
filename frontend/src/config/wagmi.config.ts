@@ -12,7 +12,6 @@
 import { createConfig, http, webSocket, fallback } from "wagmi";
 import {
   injected,
-  metaMask,
   coinbaseWallet,
   walletConnect,
 } from "wagmi/connectors";
@@ -78,7 +77,6 @@ function buildTransport(chainId: number) {
 // NOTE: `shimDisconnect` was removed in wagmi v2 — injected() takes no options that include it.
 const connectors = [
   injected(),
-  metaMask(),
   coinbaseWallet({
     appName:    process.env.NEXT_PUBLIC_APP_NAME ?? "Nexora",
     appLogoUrl: `${process.env.NEXT_PUBLIC_APP_URL ?? ""}/logo.svg`,
