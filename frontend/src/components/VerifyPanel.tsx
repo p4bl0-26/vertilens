@@ -12,6 +12,8 @@ export function VerifyPanel({ onThemeChange }: { onThemeChange?: (theme: "theme-
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [result, setResult] = useState<any | null>(null);
   const [explanation, setExplanation] = useState<string | null>(null);
+  const [aiAnalysis, setAiAnalysis] = useState<{risk: string, confidence: number, reasons: string[]} | null>(null);
+  const [isAiAnalyzing, setIsAiAnalyzing] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const handleDrop = (e: React.DragEvent) => {
@@ -29,13 +31,39 @@ export function VerifyPanel({ onThemeChange }: { onThemeChange?: (theme: "theme-
     setResult(null);
     setExplanation(null);
     setErrorMsg(null);
-
-    // Simulate pipeline progress for UX while single API executes
-    const t1 = setTimeout(() => setVerifyStep(2), 1500);
-    const t2 = setTimeout(() => setVerifyStep(3), 3500);
+    setAiAnalysis(null);
+    setIsAiAnalyzing(false);
 
     const formData = new FormData();
     formData.append("image", f);
+
+    const enableAiAnalysis = process.env.NEXT_PUBLIC_ENABLE_AI_ANALYSIS === "true";
+    
+    if (enableAiAnalysis) {
+      setIsAiAnalyzing(true);
+      fetch("/api/ai-analysis", {
+        method: "POST",
+        body: formData,
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          setAiAnalysis(data);
+        })
+        .catch((err) => {
+          console.error("AI Analysis failed:", err);
+          setAiAnalysis({
+            risk: "UNKNOWN",
+            confidence: 0,
+            reasons: ["AI analysis unavailable"]
+          });
+        })
+        .finally(() => {
+          setIsAiAnalyzing(false);
+        });
+    }
+    // Simulate pipeline progress for UX while single API executes
+    const t1 = setTimeout(() => setVerifyStep(2), 1500);
+    const t2 = setTimeout(() => setVerifyStep(3), 3500);
 
     try {
       // 1. Run Verification
@@ -114,6 +142,7 @@ export function VerifyPanel({ onThemeChange }: { onThemeChange?: (theme: "theme-
           } else {
             setExplanation(verifyData.data.tamperDescription || "AI analysis failed.");
           }
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
           console.error("AI Explanation Error:", err);
           setExplanation("AI Forensic explanation unavailable. The asset exhibits structural differences.");
@@ -123,6 +152,7 @@ export function VerifyPanel({ onThemeChange }: { onThemeChange?: (theme: "theme-
         // NOT_REGISTERED
         setIsVerifying(false);
       }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       setErrorMsg(err.message || "An unexpected error occurred.");
       setIsVerifying(false);
@@ -132,6 +162,8 @@ export function VerifyPanel({ onThemeChange }: { onThemeChange?: (theme: "theme-
   const reset = () => {
     setFile(null);
     setResult(null);
+    setAiAnalysis(null);
+    setIsAiAnalyzing(false);
     onThemeChange?.("");
   };
 
@@ -459,6 +491,81 @@ export function VerifyPanel({ onThemeChange }: { onThemeChange?: (theme: "theme-
                     </div>
                   </div>
                 </div>
+              </div>
+            )}
+
+            {/* AI Forensic Content Analysis Section */}
+            {process.env.NEXT_PUBLIC_ENABLE_AI_ANALYSIS === "true" && (result || isAiAnalyzing) && (
+              <div className="w-full mt-8 pt-8 border-t border-zinc-800">
+                <div className="flex items-center gap-3 mb-6 relative z-10">
+                  <h3 className="text-xl font-bold text-white tracking-tight">AI FORENSIC CONTENT ANALYSIS</h3>
+                  <span className="px-2 py-0.5 bg-brand-500/10 text-brand-400 border border-brand-500/30 rounded text-[10px] font-bold uppercase tracking-widest">
+                    Research Preview
+                  </span>
+                </div>
+
+                {isAiAnalyzing ? (
+                  <div className="flex items-center justify-center p-10 bg-black border border-zinc-800 rounded-lg animate-pulse relative z-10">
+                    <div className="flex items-center gap-4">
+                      <div className="w-6 h-6 border-[3px] border-zinc-800 border-t-zinc-400 rounded-full animate-spin" />
+                      <span className="text-zinc-500 font-medium tracking-wide">Analyzing visual authenticity...</span>
+                    </div>
+                  </div>
+                ) : aiAnalysis ? (
+                  (() => {
+                    const isLowConf = aiAnalysis.confidence < 60;
+                    const displayRisk = isLowConf ? "INCONCLUSIVE" : aiAnalysis.risk;
+                    
+                    let theme = {
+                      bg: "bg-zinc-950/20",
+                      border: "border-zinc-500/30",
+                      text: "text-zinc-500",
+                      dot: "bg-zinc-500/50"
+                    };
+                    
+                    if (displayRisk === "LOW") {
+                      theme = { bg: "bg-lime-950/20", border: "border-lime-500/30", text: "text-lime-500", dot: "bg-lime-500/50" };
+                    } else if (displayRisk === "MEDIUM") {
+                      theme = { bg: "bg-yellow-950/20", border: "border-yellow-500/30", text: "text-yellow-500", dot: "bg-yellow-500/50" };
+                    } else if (displayRisk === "HIGH") {
+                      theme = { bg: "bg-red-950/20", border: "border-red-500/30", text: "text-red-500", dot: "bg-red-500/50" };
+                    } else if (displayRisk === "INCONCLUSIVE") {
+                      theme = { bg: "bg-blue-950/20", border: "border-blue-500/30", text: "text-blue-500", dot: "bg-blue-500/50" };
+                    }
+
+                    return (
+                      <div className={`w-full ${theme.bg} border ${theme.border} rounded-lg p-6 relative z-10 transition-colors duration-500`}>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                          
+                          <div className="md:col-span-1">
+                            <span className="text-zinc-500 text-xs font-medium block mb-2 uppercase tracking-wider">Risk Level</span>
+                            <div className={`text-3xl font-black ${theme.text} tracking-tight mb-4 drop-shadow-[0_0_8px_currentColor]`}>{displayRisk}</div>
+                            
+                            <span className="text-zinc-500 text-xs font-medium block mb-1 uppercase tracking-wider">Confidence</span>
+                            <div className="font-mono text-xl text-zinc-300">{aiAnalysis.confidence}%</div>
+                          </div>
+
+                          <div className="md:col-span-2">
+                            <span className="text-zinc-500 text-xs font-medium block mb-3 uppercase tracking-wider">Indicators</span>
+                            <ul className="space-y-2">
+                              {aiAnalysis.reasons.map((reason: string, i: number) => (
+                                <li key={i} className="flex items-start gap-2 text-zinc-300 text-sm">
+                                  <span className={`mt-1.5 w-1.5 h-1.5 rounded-full ${theme.dot} shrink-0`} />
+                                  <span>{reason}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+
+                        </div>
+
+                        <div className="mt-6 pt-4 border-t border-zinc-800/50 text-xs text-zinc-500 italic">
+                          This assessment estimates the likelihood of synthetic content based on visual indicators and should not be treated as definitive proof.
+                        </div>
+                      </div>
+                    );
+                  })()
+                ) : null}
               </div>
             )}
 

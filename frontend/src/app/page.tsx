@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Link from "next/link";
+
 import { 
   ShieldCheck, Database, Hexagon, FileCode2, QrCode, Network, 
   Lock, Fingerprint, Cpu, Layers, Link2, Box, Eye, FileSignature, Share2,
