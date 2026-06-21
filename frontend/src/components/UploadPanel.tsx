@@ -1,9 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { UploadCloud, CheckCircle2, FileText } from "lucide-react";
+import { UploadCloud, CheckCircle2, FileText, ArrowUpRight } from "lucide-react";
 import { AnchorButton } from "./AnchorButton";
-import { QRDisplay } from "./QRDisplay";
 
 export function UploadPanel() {
   const [file, setFile] = useState<File | null>(null);
@@ -12,6 +11,8 @@ export function UploadPanel() {
   const [assetId, setAssetId] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [txHash, setTxHash] = useState<string | null>(null);
+  const [timestamp, setTimestamp] = useState<string | null>(null);
 
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
@@ -27,6 +28,8 @@ export function UploadPanel() {
     setErrorMsg(null);
     setHash(null);
     setAssetId(null);
+    setTxHash(null);
+    setTimestamp(null);
 
     const formData = new FormData();
     formData.append("image", f);
@@ -116,18 +119,61 @@ export function UploadPanel() {
             </div>
           </div>
 
-          <div className="w-full max-w-md">
-            <AnchorButton
-              hash={hash || ""}
-              assetId={assetId || ""}
-              disabled={!hash || !assetId}
-              onSuccess={() => console.log("Anchored!")}
-            />
-          </div>
+          {!txHash ? (
+            <div className="w-full max-w-md">
+              <AnchorButton
+                hash={hash || ""}
+                assetId={assetId || ""}
+                disabled={!hash || !assetId}
+                onSuccess={(tx) => {
+                  setTxHash(tx);
+                  setTimestamp(new Date().toLocaleString());
+                }}
+              />
+            </div>
+          ) : (
+            <div className="w-full mt-4 p-8 border border-lime-500/30 bg-lime-500/5 rounded-xl flex flex-col items-center shadow-[0_0_30px_rgba(132,204,22,0.1)]">
+              <CheckCircle2 className="w-16 h-16 text-lime-500 mb-4 drop-shadow-[0_0_15px_rgba(132,204,22,0.6)]" strokeWidth={1.5} />
+              <h3 className="text-2xl font-bold text-white mb-8 tracking-tight">Asset Successfully Registered</h3>
+              
+              <div className="w-full max-w-md space-y-4 mb-8 text-left">
+                <div className="flex items-center gap-3 text-zinc-300">
+                  <CheckCircle2 className="w-5 h-5 text-lime-500" strokeWidth={2} />
+                  <span className="font-medium">SHA-256 Fingerprint Generated</span>
+                </div>
+                <div className="flex items-center gap-3 text-zinc-300">
+                  <CheckCircle2 className="w-5 h-5 text-lime-500" strokeWidth={2} />
+                  <span className="font-medium">Metadata Stored</span>
+                </div>
+                <div className="flex items-center gap-3 text-zinc-300">
+                  <CheckCircle2 className="w-5 h-5 text-lime-500" strokeWidth={2} />
+                  <span className="font-medium">Provenance Anchored on Monad</span>
+                </div>
+                <div className="flex items-center gap-3 text-zinc-300">
+                  <CheckCircle2 className="w-5 h-5 text-lime-500" strokeWidth={2} />
+                  <span className="font-medium">Blockchain Record Verified</span>
+                </div>
+              </div>
 
-          {hash && assetId && (
-            <div className="w-full mt-10 pt-10 border-t border-zinc-800 flex justify-center">
-              <QRDisplay assetId={assetId} />
+              <div className="w-full bg-black/60 border border-zinc-800 rounded-lg p-5 text-left mb-8 backdrop-blur-sm">
+                <div className="mb-4">
+                  <span className="text-zinc-500 text-xs font-medium block mb-1 uppercase tracking-wider">Registration Timestamp</span>
+                  <span className="font-mono text-sm text-zinc-300">{timestamp}</span>
+                </div>
+                <div>
+                  <span className="text-zinc-500 text-xs font-medium block mb-1 uppercase tracking-wider">Transaction Hash</span>
+                  <span className="font-mono text-sm text-lime-400 break-all">{txHash}</span>
+                </div>
+              </div>
+
+              <a
+                href={`https://testnet.monadexplorer.com/tx/${txHash}`}
+                target="_blank"
+                rel="noreferrer"
+                className="px-6 py-3 bg-zinc-900 border border-zinc-700 hover:border-lime-500/50 hover:bg-black rounded-lg text-sm text-white font-medium transition-colors flex items-center justify-center gap-2 w-full max-w-sm"
+              >
+                View on Monad Explorer <ArrowUpRight className="w-4 h-4" />
+              </a>
             </div>
           )}
         </div>

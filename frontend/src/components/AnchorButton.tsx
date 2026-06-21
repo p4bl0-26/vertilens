@@ -7,7 +7,7 @@ interface AnchorButtonProps {
   hash: string;
   assetId: string;
   disabled?: boolean;
-  onSuccess?: () => void;
+  onSuccess?: (txHash: string) => void;
 }
 
 export function AnchorButton({ hash, assetId, disabled, onSuccess }: AnchorButtonProps) {
@@ -32,7 +32,7 @@ export function AnchorButton({ hash, assetId, disabled, onSuccess }: AnchorButto
       }
 
       setTxHash(data.data.txHash);
-      if (onSuccess) onSuccess();
+      if (onSuccess) onSuccess(data.data.txHash);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       console.error("Anchoring error:", err);
@@ -43,21 +43,7 @@ export function AnchorButton({ hash, assetId, disabled, onSuccess }: AnchorButto
   };
 
   if (txHash) {
-    return (
-      <div className="w-full flex flex-col items-center">
-        <div className="w-full p-4 bg-lime-500/10 border border-lime-500/30 rounded-lg text-center">
-          <p className="text-lime-400 font-medium mb-1 drop-shadow-[0_0_2px_rgba(132,204,22,0.8)]">Credibility Minted</p>
-          <a
-            href={`https://testnet.monadexplorer.com/tx/${txHash}`}
-            target="_blank"
-            rel="noreferrer"
-            className="text-sm text-zinc-400 hover:text-lime-400 transition-colors flex items-center justify-center gap-1"
-          >
-            View on Explorer <ArrowUpRight className="w-3 h-3" />
-          </a>
-        </div>
-      </div>
-    );
+    return null;
   }
 
   return (
