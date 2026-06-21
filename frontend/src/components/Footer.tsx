@@ -42,7 +42,6 @@ export function Footer() {
               <li className="flex items-center gap-2"><div className="w-1 h-1 bg-zinc-700 rounded-full"/> Supabase</li>
               <li className="flex items-center gap-2"><div className="w-1 h-1 bg-zinc-700 rounded-full"/> Gemini AI</li>
               <li className="flex items-center gap-2"><div className="w-1 h-1 bg-zinc-700 rounded-full"/> Solidity</li>
-              <li className="flex items-center gap-2"><div className="w-1 h-1 bg-zinc-700 rounded-full"/> Wagmi + RainbowKit</li>
             </ul>
           </div>
 
