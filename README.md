@@ -1,5 +1,7 @@
 # Veritas (Nexora-web3)
 
+**Live App:** [https://veritas-beta-green.vercel.app/](https://veritas-beta-green.vercel.app/)
+
 ![Banner Placeholder](https://via.placeholder.com/1200x300?text=Veritas+Web3+Monorepo)
 
 **Veritas** (also referred to as *nexora-web3*) is a full-stack Web3 application designed to anchor and verify the provenance of digital content on the **Monad Testnet**. It allows users to register digital assets, securely hash their contents, and store an immutable record on-chain.
